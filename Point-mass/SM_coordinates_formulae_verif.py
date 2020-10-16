@@ -51,4 +51,3 @@ def turn_radius (n, d):
 turn_radius(a_two, (2 * np.sin(np.pi - A_rad)))
 
 print(turn_radius(a_two, (2 * np.sin(np.pi - A_rad))))
-
