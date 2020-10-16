@@ -49,4 +49,15 @@ df['Corner Radius'] = 'Value'
 
 df.at[1,'Corner Radius'] = turn_radius(a_two, (2 * np.sin(np.pi - A_rad)))
 
-print(df.head())
+# print(df.head())
+
+# df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\track_coordinates\calculated radiuses.csv')
+
+
+file = r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\track_coordinates\Sample_track.csv'
+
+def sum1forline(file):
+    with open(file) as f:
+        return sum(1 for line in f)
+
+print(sum1forline(file))
