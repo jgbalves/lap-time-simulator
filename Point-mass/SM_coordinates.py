@@ -1,16 +1,6 @@
 import pandas as pd
 import numpy as np
 
-# everythimg that have ## is to delete later
-
-# # file = r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\track_coordinates\Sample_track.csv'
-
-# # def sum1forline(file):
-# #    with open(file) as f:
-# #        return sum(1 for line in f)
-
-# # csv_size = sum1forline(file)
-
 df = pd.read_csv("C:\\Users\\jgbal\\Github\\lap-time-simulator\\Point-mass\\track_coordinates\\Sample_track.csv", sep = ';', low_memory = False)
 
 # convert column "cx" of a DataFrame
@@ -111,6 +101,3 @@ df['Corner Radius'] = df2.apply(calculate_turn_radius, axis = 1)
 
 # recording the resulting dataframe in a csv
 df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\track_coordinates\calculated radiuses.csv')
-
-# print(csv_size)
-
