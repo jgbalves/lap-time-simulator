@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv("C:\\Users\\jgbal\\Github\\lap-time-simulator\\Point-mass\\track_coordinates\\Sample_track.csv", sep = ';', low_memory = False)
+# Later on is a good idea to change the separators from ; to ,
+df = pd.read_csv("C:\\Users\\jgbal\\Github\\lap-time-simulator\\Point-mass\\track_coordinates\\Sample_track.csv", sep = ',', low_memory = False)
 
 # convert column "cx" of a DataFrame
 df["cx"] = pd.to_numeric(df["cx"], downcast = 'float')
@@ -100,4 +101,4 @@ def calculate_turn_radius (row):
 df['Corner Radius'] = df2.apply(calculate_turn_radius, axis = 1)
 
 # recording the resulting dataframe in a csv
-df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\track_coordinates\calculated radiuses.csv')
+df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\track_coordinates\calculated_radiuses.csv')
