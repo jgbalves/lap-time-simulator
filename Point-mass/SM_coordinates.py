@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-# Later on is a good idea to change the separators from ; to ,
+# Track file (the start point needs to be just one. Neither b or c distances can't be zero (see those ahead))
 df = pd.read_csv("C:\\Users\\jgbal\\Github\\lap-time-simulator\\Point-mass\\track_coordinates\\Sample_track.csv", sep = ',', low_memory = False)
 
 # convert column "cx" of a DataFrame
@@ -77,6 +77,14 @@ cos_A = (
     (2 * b * c)
     )
 
+# def cos_A (a, b, c):
+#    if (b*c) ==0: return -1
+#    return (
+#    (b ** 2 + c ** 2 - a ** 2) /
+#    (2 * b * c)
+#    )
+
+#cos_A(a, b, c)
 
 A_rad = np.arccos(cos_A)
 
@@ -99,6 +107,8 @@ def calculate_turn_radius (row):
 
 # aplying the two functions combined, so we can write the calculation for row to row
 df['Corner Radius'] = df2.apply(calculate_turn_radius, axis = 1)
+
+
 
 # recording the resulting dataframe in a csv
 df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\track_coordinates\calculated_radiuses.csv')
