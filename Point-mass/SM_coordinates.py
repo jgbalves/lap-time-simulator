@@ -4,10 +4,8 @@ import numpy as np
 # Track file (the start point needs to be just one. Neither b or c distances can't be zero (see those ahead))
 df = pd.read_csv("C:\\Users\\jgbal\\Github\\lap-time-simulator\\Point-mass\\track_coordinates\\Sample_track.csv", sep = ',', low_memory = False)
 
-# convert column "cx" of a DataFrame
+# convert column "cx" and "cy" of a DataFrame
 df["cx"] = pd.to_numeric(df["cx"], downcast = 'float')
-
-# convert column "cy" of a DataFrame
 df["cy"] = pd.to_numeric(df["cy"], downcast = 'float')
 
 # To add new columns df['New column'] = 'test'
@@ -77,15 +75,7 @@ cos_A = (
     (2 * b * c)
     )
 
-# def cos_A (a, b, c):
-#    if (b*c) ==0: return -1
-#    return (
-#    (b ** 2 + c ** 2 - a ** 2) /
-#    (2 * b * c)
-#    )
-
 #cos_A(a, b, c)
-
 A_rad = np.arccos(cos_A)
 
 # Probably it will not be used but there's the conversion from rad to deg

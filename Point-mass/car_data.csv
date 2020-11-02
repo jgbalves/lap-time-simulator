@@ -2,7 +2,7 @@ car data,value,unit
 mass,700,kg
 frontal area,1.54,m²
 Cd,0.525,NaN
-GG circle radius,1,NaN
+GG circle radius,1,g
 power output,260,bhp
 trans efficiency,91,%
 air density,1.23,kg/m³
