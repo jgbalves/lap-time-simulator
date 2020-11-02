@@ -12,8 +12,8 @@ df2.dropna(inplace = True)
 # converting dataframe colums to numeric to avoid errors
 df['cx'] = pd.to_numeric(df['cx'], downcast= 'float')
 df['cy'] = pd.to_numeric(df['cy'], downcast= 'float')
-df['Corner Radius'] = pd.to_numeric(['Corner Radius'], downcast= 'float')
-g_lat = pd.to_numeric(df2.iloc[3,1], downcast='float')
+df['Corner Radius'] = pd.to_numeric(df['Corner Radius'], downcast= 'float')
+g_lat = pd.to_numeric(df2.iloc[2,1], downcast='float')
 
 
 cx = df['cx']
@@ -26,7 +26,9 @@ cx = pd.Series(data = cx)
 cy = pd.Series(data = cy)
 tr = pd.Series(data = tr)
 
-corner_velocity = np.sqrt(g_lat * tr)
+corner_velocity = np.sqrt(g_lat * tr * 9.81)
+
+df['speed turn 1'] = corner_velocity
 
 # Converting Radiuses in arrays so they can be used in another function
 # z = np.array(df['Corner Radius'])
@@ -40,4 +42,4 @@ corner_velocity = np.sqrt(g_lat * tr)
 # finding local minima
 # K = np.r_[True, z[1:] < z[:-1]] & np.r_[z[:-1] < z[1:], True]
 
-# df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
+df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
