@@ -94,11 +94,8 @@ def turn_radius (n, d):
 def calculate_turn_radius (row):
     return turn_radius(row.Distance_A, (2 * np.sin(np.pi - row.Angle_Radians)))
 
-
 # aplying the two functions combined, so we can write the calculation for row to row
 df['Corner Radius'] = df2.apply(calculate_turn_radius, axis = 1)
-
-
 
 # recording the resulting dataframe in a csv
 df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\track_coordinates\calculated_radiuses.csv')

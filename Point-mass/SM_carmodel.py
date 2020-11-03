@@ -15,31 +15,56 @@ df['cy'] = pd.to_numeric(df['cy'], downcast= 'float')
 df['Corner Radius'] = pd.to_numeric(df['Corner Radius'], downcast= 'float')
 g_lat = pd.to_numeric(df2.iloc[2,1], downcast='float')
 
-
+# Giving the columns variable names to simplify
 cx = df['cx']
 cy = df['cy']
 tr = df['Corner Radius']
 
 # converting from array to series
-
 cx = pd.Series(data = cx)
 cy = pd.Series(data = cy)
 tr = pd.Series(data = tr)
 
+# Simple corner velocity (centripetal) V = (g_lat * 9,81 * Radius) ^ 1/2 
 corner_velocity = np.sqrt(g_lat * tr * 9.81)
 
-df['speed turn 1'] = corner_velocity
-
-# Converting Radiuses in arrays so they can be used in another function
+# In few moments we will need to create x columns for each local minima
+# Converting Radiuses in arrays so they can be used in local minima function
 # z = np.array(df['Corner Radius'])
-
-# def corner_velocity (acc, R):
-#    if R == np.inf: return np.nan
-#    return np.sqrt(acc * R)
-
-# df['veloc'] = df.apply(corner_velocity(g_lat, R), axis = 1)
-
 # finding local minima
 # K = np.r_[True, z[1:] < z[:-1]] & np.r_[z[:-1] < z[1:], True]
+
+start = 6
+finish = start - 2
+corner_speed = []
+
+df['speed turn 1'] = np.nan
+df.at[start,'speed turn 1'] = np.sqrt(g_lat * df.at[start, 'Corner Radius'] * 9.81)
+
+
+corner_speed_rolled = np.roll(df['speed turn 1'],-start)
+cx_rolled = np.roll(cx, -start)
+cy_rolled = np.roll(cy, -start)
+
+
+for index in range(0, cx.size):
+    cx_bfr = cx_rolled.iat[index - 1]
+    cx_act = cx_rolled.iat[index]
+    
+    cy_bfr = cy_rolled.iat[index -1]
+    cy_act = cy_rolled.iat[index]
+
+    index = np.sqrt(
+        index ** 2 + 2 * g_lat * np.sqrt((cx_act - cx_bfr)**2+(cy_act - cy_bfr)**2)
+    )
+
+    corner_speed.append(index)
+
+
+corner_speed_unrolled = np.roll(df['speed turn 1'],start)
+cx_unrolled = np.roll(cx, start)
+cy_unrolled = np.roll(cy, start)
+
+  
 
 df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
