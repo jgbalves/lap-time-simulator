@@ -31,62 +31,101 @@ K = np.r_[True, tr[1:] < tr[:-1]] & np.r_[tr[:-1] < tr[1:], True]
 # where are the apexes(indexes)
 apexes = [i for i, x in enumerate(K) if x]
 
-for t in apexes:
-    df[f'Test {t}'] = np.nan
-    cs = df[f'Test {t}']
-
-    start = t
-
-    spd_apex = np.sqrt(
-        g_lat * df.at[start, 'Corner Radius'] * 9.81
-    )
-
-# Simple corner velocity (centripetal) V = (g_lat * 9,81 * Radius) ^ 1/2 
-
-# Creating the column where the corner speeds will be put
-df['speed turn 1'] = np.nan
-cs = df['speed turn 1']
-
-start = 6
-spd1 = np.sqrt(g_lat * df.at[start, 'Corner Radius'] * 9.81)
-df.at[start,'speed turn 1'] = spd1
-
 # convert from array to series
 cx = pd.Series(data= cx)
 cy = pd.Series(data= cy)
 tr = pd.Series(data= tr)
-cs = pd.Series(data= cs)
 
-for index in range (start+1, cx.size):
-    cx_bfr = cx.iat[index -1]
-    cx_act = cx.iat[index]
 
-    cy_bfr = cy.iat[index -1]
-    cy_act = cy.iat[index]
+for t in apexes:
+    df[f'Accel {t}'] = np.nan
+    cs = df[f'Accel {t}']
+    cs = pd.Series(data= cs)
 
-    spd_bfr = cs.iat[index-1]
-    # import ipdb; ipdb.set_trace()
+    start = t
+          
+    # Simple corner velocity (centripetal) V = (g_lat * 9,81 * Radius) ^ 1/2 
+    spd_apex = np.sqrt(
+        g_lat * df.at[start, 'Corner Radius'] * 9.81
+    )
 
-    cs.at[index] = np.sqrt(
+    df.at[start, f'Accel {t}'] = spd_apex
+
+    for index in range (start + 1, cx.size):
+        cx_bfr = cx.iat[index -1]
+        cx_act = cx.iat[index]
+
+        cy_bfr = cy.iat[index -1]
+        cy_act = cy.iat[index]
+
+        spd_bfr = cs.iat[index -1]
+
+        cs.at[index] = np.sqrt(
             spd_bfr**2 + 2 * 9.81 * g_lat * np.sqrt(
                 (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
             )
         )
 
-for index in range (0, start):
-    cx_bfr = cx.iat[index -1]
-    cx_act = cx.iat[index]
+    for index in range (0, start):
+        cx_bfr = cx.iat[index -1]
+        cx_act = cx.iat[index]
 
-    cy_bfr = cy.iat[index -1]
-    cy_act = cy.iat[index]
+        cy_bfr = cy.iat[index -1]
+        cy_act = cy.iat[index]
 
-    spd_bfr = cs.iat[index-1]
-    # import ipdb; ipdb.set_trace()
+        spd_bfr = cs.iat[index -1]
 
-    cs.at[index] = np.sqrt(
+        cs.at[index] = np.sqrt(
             spd_bfr**2 + 2 * 9.81 * g_lat * np.sqrt(
                 (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
             )
         )
+
+for t in apexes:
+    df[f'Decel {t}'] = np.nan
+    cs = df[f'Decel {t}']
+    cs = pd.Series(data= cs)
+
+    start = t
+          
+    # Simple corner velocity (centripetal) V = (g_lat * 9,81 * Radius) ^ 1/2 
+    spd_apex = np.sqrt(
+        g_lat * df.at[start, 'Corner Radius'] * 9.81
+    )
+
+    df.at[start, f'Decel {t}'] = spd_apex
+
+    for index in range (start + 1, cx.size):
+        cx_bfr = cx.iat[index -1]
+        cx_act = cx.iat[index]
+
+        cy_bfr = cy.iat[index -1]
+        cy_act = cy.iat[index]
+
+        spd_bfr = cs.iat[index -1]
+
+        cs.at[index] = np.sqrt(
+            spd_bfr**2 - 2 * 9.81 * g_lat * np.sqrt(
+                (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
+            )
+        )
+
+    for index in range (0, start):
+        cx_bfr = cx.iat[index -1]
+        cx_act = cx.iat[index]
+
+        cy_bfr = cy.iat[index -1]
+        cy_act = cy.iat[index]
+
+        spd_bfr = cs.iat[index -1]
+
+        cs.at[index] = np.sqrt(
+            spd_bfr**2 - 2 * 9.81 * g_lat * np.sqrt(
+                (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
+            )
+        )
+
+
+# Check the braking values, compare what is best, to change the + to - or to change the coordinates from bfr and act to act and next
 
 df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
