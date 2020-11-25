@@ -36,11 +36,17 @@ cx = pd.Series(data= cx)
 cy = pd.Series(data= cy)
 tr = pd.Series(data= tr)
 
+# getting note of the corner names, so we can get the minimum values of them all later 
+corner_names = []
 
+# Accelerating 
 for t in apexes:
     df[f'Accel {t}'] = np.nan
     cs = df[f'Accel {t}']
     cs = pd.Series(data= cs)
+
+    # Putting the corner names in the list
+    corner_names.append(f'Accel {t}')
 
     start = t
           
@@ -81,10 +87,14 @@ for t in apexes:
             )
         )
 
+# Deccelerating
 for t in apexes:
     df[f'Decel {t}'] = np.nan
     cs = df[f'Decel {t}']
     cs = pd.Series(data= cs)
+
+    # Putting the corner names in the list
+    corner_names.append(f'Decel {t}')
 
     start = t
           
@@ -95,37 +105,57 @@ for t in apexes:
 
     df.at[start, f'Decel {t}'] = spd_apex
 
-    for index in range (start + 1, cx.size):
-        cx_bfr = cx.iat[index -1]
+    for index in range (start - 1, -1, -1):
         cx_act = cx.iat[index]
+        cx_nxt = cx.iat[index +1]
 
-        cy_bfr = cy.iat[index -1]
         cy_act = cy.iat[index]
+        cy_nxt = cy.iat[index +1]
 
-        spd_bfr = cs.iat[index -1]
+        spd_nxt = cs.iat[index +1]
 
         cs.at[index] = np.sqrt(
-            spd_bfr**2 - 2 * 9.81 * g_lat * np.sqrt(
-                (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
+            spd_nxt**2 + 2 * 9.81 * g_lat * np.sqrt(
+                (cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2
             )
         )
 
-    for index in range (0, start):
-        cx_bfr = cx.iat[index -1]
+    for index in range (cx.size - 1, start, -1):
         cx_act = cx.iat[index]
+        cx_nxt = cx.iat[(index +1)%cx.size]
 
-        cy_bfr = cy.iat[index -1]
         cy_act = cy.iat[index]
+        cy_nxt = cy.iat[(index +1)%cx.size]
 
-        spd_bfr = cs.iat[index -1]
+        spd_nxt = cs.iat[(index +1)%cx.size]
 
         cs.at[index] = np.sqrt(
-            spd_bfr**2 - 2 * 9.81 * g_lat * np.sqrt(
-                (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
+            spd_nxt**2 + 2 * 9.81 * g_lat * np.sqrt(
+                (cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2
             )
         )
 
+    df2 = pd.DataFrame(data= {f'Accel {t}', f'Decel {t}'})
 
-# Check the braking values, compare what is best, to change the + to - or to change the coordinates from bfr and act to act and next
 
+# making a report
 df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
+
+# getting all the minimum speeds and organizing them in a signal
+
+turns = df[corner_names]
+speed_profile = turns.min(axis = 1)
+
+# Plot time!
+plt.plot(speed_profile, 'r', Label = 'Speed (m/s)')
+
+# plot styling
+plt.legend(loc="upper right")
+plt.title('[Piloto]: Jotoca / [Pista]: San Martin Pass')
+plt.xlabel('Distance')
+plt.ylabel('Speed (m/s)')
+plt.grid()
+
+plt.show()
+
+
