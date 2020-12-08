@@ -1,11 +1,17 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
+
+
 
 
 # Track details & car data
-df = pd.read_csv(r"C:\Users\jgbal\Github\lap-time-simulator\Point-mass\track_coordinates\calculated_radiuses.csv")
-df2 = pd.read_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\car_data.csv')
+track_details_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', 'calculated_radiuses.csv')
+car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'car_data.csv')
+
+df = pd.read_csv(track_details_path)
+df2 = pd.read_csv(car_data_path)
 
 # Dropping null value columns out to avoid errors
 df2.dropna(inplace = True)
@@ -15,7 +21,6 @@ df['cx'] = pd.to_numeric(df['cx'], downcast= 'float')
 df['cy'] = pd.to_numeric(df['cy'], downcast= 'float')
 df['Corner Radius'] = pd.to_numeric(df['Corner Radius'], downcast= 'float')
 g_lat = pd.to_numeric(df2.iloc[2,1], downcast='float')
-
 
 
 # Giving the columns variable names to simplify
@@ -35,6 +40,19 @@ apexes = [i for i, x in enumerate(K) if x]
 cx = pd.Series(data= cx)
 cy = pd.Series(data= cy)
 tr = pd.Series(data= tr)
+
+# Counting the distances between each point
+
+dx = []
+
+for index in range(0, cx.size):
+        cx_bfr = cx.iat[index -1]
+        cx_act = cx.iat[index]
+
+        cy_bfr = cy.iat[index -1]
+        cy_act = cy.iat[index]
+
+
 
 # getting note of the corner names, so we can get the minimum values of them all later 
 corner_names = []
@@ -139,23 +157,33 @@ for t in apexes:
 
 
 # making a report
-df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
+# df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
 
 # getting all the minimum speeds and organizing them in a signal
 
 turns = df[corner_names]
 speed_profile = turns.min(axis = 1)
 
-# Plot time!
-plt.plot(speed_profile, 'r', Label = 'Speed (m/s)')
 
-# plot styling
-plt.legend(loc="upper right")
-plt.title('[Piloto]: Jotoca / [Pista]: San Martin Pass')
-plt.xlabel('Distance')
-plt.ylabel('Speed (m/s)')
-plt.grid()
+# Plot time!
+# plt.plot(speed_profile, 'r', Label = 'Speed (m/s)')
+
+
+# # plot styling
+# plt.legend(loc="upper right")
+# plt.title('[Piloto]: Braia / [Pista]: Interlagos')
+# plt.xlabel('Distance')
+# plt.ylabel('Speed (m/s)')
+# plt.grid()
+
+fig, ax = plt.subplots(2)
+fig.suptitle('[Piloto]: Braia / [Pista]: Interlagos')
+
+ax[0].plot(speed_profile, 'r', Label = 'Speed (m/s)')
+ax[0].set_title('Speed')
+
+ax[1].plot(cx,cy,'r')
+ax[1].set_title('Track map')
+
 
 plt.show()
-
-
