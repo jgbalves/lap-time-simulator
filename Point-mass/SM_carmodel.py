@@ -52,6 +52,12 @@ for index in range(0, cx.size):
         cy_bfr = cy.iat[index -1]
         cy_act = cy.iat[index]
 
+        dx.append(
+            np.sqrt(
+                (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
+            )
+        )
+df['dx'] = dx
 
 
 # getting note of the corner names, so we can get the minimum values of them all later 
@@ -160,10 +166,13 @@ for t in apexes:
 # df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
 
 # getting all the minimum speeds and organizing them in a signal
-
 turns = df[corner_names]
 speed_profile = turns.min(axis = 1)
 
+# lap time
+df['speed'] = speed_profile
+df['t(s)'] = df['dx'] / df['speed']
+lap_time = df['t(s)'].sum()
 
 # Plot time!
 # plt.plot(speed_profile, 'r', Label = 'Speed (m/s)')
@@ -186,4 +195,5 @@ ax[1].plot(cx,cy,'r')
 ax[1].set_title('Track map')
 
 
-plt.show()
+print(lap_time)
+#plt.show()
