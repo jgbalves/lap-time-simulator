@@ -175,9 +175,8 @@ df['t(s)'] = df['dx'] / df['speed']
 lap_time = df['t(s)'].sum()
 
 # Plot time!
+
 # plt.plot(speed_profile, 'r', Label = 'Speed (m/s)')
-
-
 # # plot styling
 # plt.legend(loc="upper right")
 # plt.title('[Piloto]: Braia / [Pista]: Interlagos')
@@ -190,10 +189,11 @@ fig.suptitle('[Piloto]: Braia / [Pista]: Interlagos')
 
 ax[0].plot(speed_profile, 'r', Label = 'Speed (m/s)')
 ax[0].set_title('Speed')
+plt.text(1, 1, lap_time)
 
 ax[1].plot(cx,cy,'r')
 ax[1].set_title('Track map')
 
 
-print(lap_time)
-#plt.show()
+
+plt.show()
