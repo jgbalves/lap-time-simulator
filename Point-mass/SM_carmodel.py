@@ -189,7 +189,7 @@ fig.suptitle('[Piloto]: Braia / [Pista]: Interlagos')
 
 ax[0].plot(speed_profile, 'r', Label = 'Speed (m/s)')
 ax[0].set_title('Speed')
-plt.text(1, 1, lap_time)
+plt.text(1, 1, '%.2f' % float(lap_time), bbox=dict(facecolor='white', alpha=0.5))
 
 ax[1].plot(cx,cy,'r')
 ax[1].set_title('Track map')
