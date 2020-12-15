@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 
-
-
 # Track details & car data
 track_details_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', 'calculated_radiuses.csv')
 car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'car_data.csv')
@@ -20,7 +18,8 @@ df2.dropna(inplace = True)
 df['cx'] = pd.to_numeric(df['cx'], downcast= 'float')
 df['cy'] = pd.to_numeric(df['cy'], downcast= 'float')
 df['Corner Radius'] = pd.to_numeric(df['Corner Radius'], downcast= 'float')
-g_lat = pd.to_numeric(df2.iloc[2,1], downcast='float')
+g_lat = pd.to_numeric(df2.iloc[3,1], downcast='float')
+power = pd.to_numeric(df2.iloc[2,1], downcast='float')
 
 
 # Giving the columns variable names to simplify
