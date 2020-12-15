@@ -168,11 +168,17 @@ for t in apexes:
 # getting all the minimum speeds and organizing them in a signal
 turns = df[corner_names]
 speed_profile = turns.min(axis = 1)
+speed_profile_kph = speed_profile * 3.6
 
 # lap time
 df['speed'] = speed_profile
+df['speed (km/h)'] = speed_profile_kph
 df['t(s)'] = df['dx'] / df['speed']
 lap_time = df['t(s)'].sum()
+
+lt_minutes = lap_time//60
+lt_seconds = lap_time % 60
+
 
 # Plot time!
 
@@ -187,9 +193,9 @@ lap_time = df['t(s)'].sum()
 fig, ax = plt.subplots(2)
 fig.suptitle('[Piloto]: Braia / [Pista]: Interlagos')
 
-ax[0].plot(speed_profile, 'r', Label = 'Speed (m/s)')
+ax[0].plot(speed_profile_kph, 'r', Label = 'Speed (km/h)')
 ax[0].set_title('Speed')
-plt.text(1, 1, '%.2f' % float(lap_time), bbox=dict(facecolor='white', alpha=0.5))
+plt.text(1, 1, f'{lt_minutes:.0f}:{lt_seconds:.2f}', bbox=dict(facecolor='white', alpha=0.5))
 
 ax[1].plot(cx,cy,'r')
 ax[1].set_title('Track map')
