@@ -19,7 +19,11 @@ df['cx'] = pd.to_numeric(df['cx'], downcast= 'float')
 df['cy'] = pd.to_numeric(df['cy'], downcast= 'float')
 df['Corner Radius'] = pd.to_numeric(df['Corner Radius'], downcast= 'float')
 g_lat = pd.to_numeric(df2.iloc[3,1], downcast='float')
-power = pd.to_numeric(df2.iloc[2,1], downcast='float')
+tranny_efc = pd.to_numeric(df2.iloc[5,1], downcast='float')
+Power = pd.to_numeric(df2.iloc[4,1], downcast='float') * 7457 * tranny_efc
+air_density =  pd.to_numeric(df2.iloc[6,1], downcast='float')
+frontal_area = pd.to_numeric(df2.iloc[1,1], downcast='float')
+drag_coef = pd.to_numeric(df2.iloc[2,1], downcast='float')
 
 
 # Giving the columns variable names to simplify
