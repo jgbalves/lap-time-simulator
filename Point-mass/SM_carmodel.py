@@ -15,15 +15,19 @@ df2 = pd.read_csv(car_data_path)
 df2.dropna(inplace = True)
 
 # converting dataframe colums to numeric to avoid errors
+
+# Track data
 df['cx'] = pd.to_numeric(df['cx'], downcast= 'float')
 df['cy'] = pd.to_numeric(df['cy'], downcast= 'float')
 df['Corner Radius'] = pd.to_numeric(df['Corner Radius'], downcast= 'float')
+# Car data
 g_lat = pd.to_numeric(df2.iloc[3,1], downcast='float')
 tranny_efc = pd.to_numeric(df2.iloc[5,1], downcast='float')
 Power = pd.to_numeric(df2.iloc[4,1], downcast='float') * 7457 * tranny_efc
 air_density =  pd.to_numeric(df2.iloc[6,1], downcast='float')
 frontal_area = pd.to_numeric(df2.iloc[1,1], downcast='float')
 drag_coef = pd.to_numeric(df2.iloc[2,1], downcast='float')
+car_mass = pd.to_numeric(df2.iloc[0,1], downcast='float')
 
 
 # Giving the columns variable names to simplify
@@ -94,9 +98,9 @@ for t in apexes:
         spd_bfr = cs.iat[index -1]
 
         cs.at[index] = np.sqrt(
-            spd_bfr**2 + 2 * 9.81 * g_lat * np.sqrt(
+            spd_bfr**2 + 2 * np.sqrt(
                 (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
-            )
+            ) * ((Power/spd_bfr) - 1/2 * air_density * spd_bfr**2 * frontal_area * drag_coef)/car_mass
         )
 
     for index in range (0, start):
@@ -109,10 +113,11 @@ for t in apexes:
         spd_bfr = cs.iat[index -1]
 
         cs.at[index] = np.sqrt(
-            spd_bfr**2 + 2 * 9.81 * g_lat * np.sqrt(
+            spd_bfr**2 + 2 * np.sqrt(
                 (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
-            )
+            ) * ((Power/spd_bfr) - 1/2 * air_density * spd_bfr**2 * frontal_area * drag_coef)/car_mass
         )
+
 
 # Deccelerating
 for t in apexes:
