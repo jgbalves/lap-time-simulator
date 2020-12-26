@@ -98,9 +98,8 @@ for t in apexes:
         spd_bfr = cs.iat[index -1]
 
         cs.at[index] = np.sqrt(
-            spd_bfr**2 + 2 * np.sqrt(
-                (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
-            ) * ((Power/spd_bfr) - 1/2 * air_density * spd_bfr**2 * frontal_area * drag_coef)/car_mass
+            spd_bfr**2 + 2 * ((cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2)             
+            * ((Power/spd_bfr) - 1/2 * air_density * spd_bfr**2 * frontal_area * drag_coef)/car_mass
         )
 
     for index in range (0, start):
@@ -113,9 +112,8 @@ for t in apexes:
         spd_bfr = cs.iat[index -1]
 
         cs.at[index] = np.sqrt(
-            spd_bfr**2 + 2 * np.sqrt(
-                (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
-            ) * ((Power/spd_bfr) - 1/2 * air_density * spd_bfr**2 * frontal_area * drag_coef)/car_mass
+            spd_bfr**2 + 2 * ((cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2)             
+            * ((Power/spd_bfr) - 1/2 * air_density * spd_bfr**2 * frontal_area * drag_coef)/car_mass
         )
 
 
@@ -147,9 +145,8 @@ for t in apexes:
         spd_nxt = cs.iat[index +1]
 
         cs.at[index] = np.sqrt(
-            spd_nxt**2 + 2 * 9.81 * g_lat * np.sqrt(
-                (cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2
-            )
+            spd_nxt**2 + 2 * ((cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2)
+            * (1/2 * air_density * spd_nxt**2 * frontal_area * drag_coef + np.sqrt(g_lat * 9.81 * car_mass)) / car_mass
         )
 
     for index in range (cx.size - 1, start, -1):
@@ -162,9 +159,8 @@ for t in apexes:
         spd_nxt = cs.iat[(index +1)%cx.size]
 
         cs.at[index] = np.sqrt(
-            spd_nxt**2 + 2 * 9.81 * g_lat * np.sqrt(
-                (cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2
-            )
+            spd_nxt**2 + 2 * ((cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2)
+            * (1/2 * air_density * spd_nxt**2 * frontal_area * drag_coef + np.sqrt(g_lat * 9.81 * car_mass)) / car_mass
         )
 
     df2 = pd.DataFrame(data= {f'Accel {t}', f'Decel {t}'})
