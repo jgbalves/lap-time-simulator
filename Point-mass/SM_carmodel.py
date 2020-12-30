@@ -94,13 +94,13 @@ for t in apexes:
 
         cy_bfr = cy.iat[index -1]
         cy_act = cy.iat[index]
-
         spd_bfr = cs.iat[index -1]
 
-        cs.at[index] = np.sqrt(
-            spd_bfr**2 + 2 * ((cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2)             
-            * ((Power/spd_bfr) - 1/2 * air_density * spd_bfr**2 * frontal_area * drag_coef)/car_mass
-        )
+        s_distance = np.sqrt((cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2)
+        drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
+
+        cs.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance *((Power/spd_bfr) - drag) / car_mass)
+
 
     for index in range (0, start):
         cx_bfr = cx.iat[index -1]
@@ -108,14 +108,12 @@ for t in apexes:
 
         cy_bfr = cy.iat[index -1]
         cy_act = cy.iat[index]
-
         spd_bfr = cs.iat[index -1]
 
-        cs.at[index] = np.sqrt(
-            spd_bfr**2 + 2 * ((cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2)             
-            * ((Power/spd_bfr) - 1/2 * air_density * spd_bfr**2 * frontal_area * drag_coef)/car_mass
-        )
+        s_distance = np.sqrt((cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2)
+        drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
 
+        cs.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance *((Power/spd_bfr) - drag) / car_mass)
 
 # Deccelerating
 for t in apexes:
@@ -144,10 +142,10 @@ for t in apexes:
 
         spd_nxt = cs.iat[index +1]
 
-        cs.at[index] = np.sqrt(
-            spd_nxt**2 + 2 * ((cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2)
-            * (1/2 * air_density * spd_nxt**2 * frontal_area * drag_coef + np.sqrt(g_lat * 9.81 * car_mass)) / car_mass
-        )
+        s_distance = np.sqrt((cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2)
+        drag = drag_coef * air_density * spd_nxt ** 2 * frontal_area / 2
+
+        cs.at[index] = np.sqrt(spd_nxt**2 + (2 * s_distance * drag + np.sqrt(g_lat**2 * (car_mass * 9.81)**2))/car_mass)
 
     for index in range (cx.size - 1, start, -1):
         cx_act = cx.iat[index]
@@ -158,10 +156,10 @@ for t in apexes:
 
         spd_nxt = cs.iat[(index +1)%cx.size]
 
-        cs.at[index] = np.sqrt(
-            spd_nxt**2 + 2 * ((cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2)
-            * (1/2 * air_density * spd_nxt**2 * frontal_area * drag_coef + np.sqrt(g_lat * 9.81 * car_mass)) / car_mass
-        )
+        s_distance = np.sqrt((cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2)
+        drag = drag_coef * air_density * spd_nxt ** 2 * frontal_area / 2
+
+        cs.at[index] = np.sqrt(spd_nxt**2 + (2 * s_distance * drag + np.sqrt(g_lat**2 * (car_mass * 9.81)**2))/car_mass)
 
     df2 = pd.DataFrame(data= {f'Accel {t}', f'Decel {t}'})
 
