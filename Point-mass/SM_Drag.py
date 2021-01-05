@@ -1,4 +1,4 @@
-import panda as pd
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -20,13 +20,13 @@ track_df['cx'] = pd.to_numeric(track_df['cx'], downcast= 'float')
 track_df['cy'] = pd.to_numeric(track_df['cy'], downcast= 'float')
 
 #car
-g_lat = pd.to_numeric(df2.iloc[3,1], downcast='float')
-tranny_efc = pd.to_numeric(df2.iloc[5,1], downcast='float')
-Power = pd.to_numeric(df2.iloc[4,1], downcast='float') * 7457 * tranny_efc
-air_density =  pd.to_numeric(df2.iloc[6,1], downcast='float')
-frontal_area = pd.to_numeric(df2.iloc[1,1], downcast='float')
-drag_coef = pd.to_numeric(df2.iloc[2,1], downcast='float')
-car_mass = pd.to_numeric(df2.iloc[0,1], downcast='float')
+g_lat = pd.to_numeric(car_df.iloc[3,1], downcast='float')
+tranny_efc = pd.to_numeric(car_df.iloc[5,1], downcast='float')
+Power = pd.to_numeric(car_df.iloc[4,1], downcast='float') * 7457 * tranny_efc
+air_density =  pd.to_numeric(car_df.iloc[6,1], downcast='float')
+frontal_area = pd.to_numeric(car_df.iloc[1,1], downcast='float')
+drag_coef = pd.to_numeric(car_df.iloc[2,1], downcast='float')
+car_mass = pd.to_numeric(car_df.iloc[0,1], downcast='float')
 
 # Passing columns as variables to simplify
 cx = track_df['cx']
@@ -60,10 +60,12 @@ dx = track_df['dx']
 
 track_df['Velocity'] = np.nan
 velocity = track_df['Velocity']
+velocity = pd.Series(data = velocity)
 
 for index in range (0, cx.size):
-    spd_bfr = 
+    spd_bfr = velocity.iat[index -1]
 
     drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
-    cs.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance *((Power/spd_bfr) - drag) / car_mass)
+    velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx *((Power/spd_bfr) - drag) / car_mass)
 
+    
