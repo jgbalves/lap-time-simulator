@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # Track path and car path (track must be a straight line)
-track_details_path = (Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', 'calculated_radiuses.csv')
+track_details_path = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', 'calculated_radiuses.csv')
 car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'car_data.csv')
 
 track_df = pd.read_csv(track_details_path)
@@ -68,4 +68,11 @@ for index in range (0, cx.size):
     drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
     velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx *((Power/spd_bfr) - drag) / car_mass)
 
-    
+velocity = velocity * 3.6
+# Plotting results
+
+fig, ax = plt.subplots(2)
+
+fig.suptitle('Results')
+
+ax[0].plot(velocity, r, Label= 'speed (km/h)')
