@@ -33,7 +33,7 @@ cx = track_df['cx']
 cy = track_df['cy']
 
 # Converting from array to series
-cx = pd.Series(cx)
+cx = pd.Series(data= cx)
 cy = pd.Series(data= cy)
 
 # Counting the distances between each point
@@ -66,13 +66,18 @@ for index in range (0, cx.size):
     spd_bfr = velocity.iat[index -1]
 
     drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
-    velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx *((Power/spd_bfr) - drag) / car_mass)
+    velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx[index] *((Power/spd_bfr) - drag) / car_mass)
 
 velocity = velocity * 3.6
+
+track_df.to_csv = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'outing.csv')
+
 # Plotting results
 
-fig, ax = plt.subplots(2)
+# fig, ax = plt.subplots(2)
 
-fig.suptitle('Results')
+# fig.suptitle('Results')
 
-ax[0].plot(velocity, r, Label= 'speed (km/h)')
+# ax[0].plot(velocity, 'r', Label= 'speed (km/h)')
+
+# plt.show()
