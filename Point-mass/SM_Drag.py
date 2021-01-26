@@ -69,8 +69,9 @@ for index in range (0, cx.size):
     velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx[index] *((Power/spd_bfr) - drag) / car_mass)
 
 velocity = velocity * 3.6
+track_df['Velocity'] = velocity
 
-track_df.to_csv = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'outing.csv')
+track_df.to_csv(Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'outing.csv'))
 
 # Plotting results
 
