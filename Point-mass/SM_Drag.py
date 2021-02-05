@@ -68,21 +68,19 @@ for index in range(1,cx.size):
     drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
 
     if spd_bfr == 0:
-        velocity.at[index] = np.sqrt1(spd_bfr**2 + 2 * dx[index] * g_lat * 9.81)
+        velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx[index] * g_lat * 9.81)
     else:
         velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx[index] * ((Power/spd_bfr) - drag) / car_mass)
 
 
 print(track_df.head())
 
-# track_df.to_csv(Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'outing.csv'))
-
 # Plotting results
 
-# fig, ax = plt.subplots(2)
+fig, ax = plt.subplots(2)
 
-# fig.suptitle('Results')
+fig.suptitle('Results')
 
-# ax[0].plot(velocity, 'r', Label= 'speed (km/h)')
+ax[0].plot(velocity, 'r', Label= 'speed (km/h)')
 
-# plt.show()
+plt.show()
