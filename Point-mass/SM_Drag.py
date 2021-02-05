@@ -21,8 +21,8 @@ track_df['cy'] = pd.to_numeric(track_df['cy'], downcast= 'float')
 
 #car
 g_lat = pd.to_numeric(car_df.iloc[3,1], downcast='float')
-tranny_efc = pd.to_numeric(car_df.iloc[5,1], downcast='float')
-Power = pd.to_numeric(car_df.iloc[4,1], downcast='float') * 7457 * tranny_efc
+tranny_efc = pd.to_numeric(car_df.iloc[5,1], downcast='float') / 100
+Power = pd.to_numeric(car_df.iloc[4,1], downcast='float') * 745.7 * tranny_efc
 air_density =  pd.to_numeric(car_df.iloc[6,1], downcast='float')
 frontal_area = pd.to_numeric(car_df.iloc[1,1], downcast='float')
 drag_coef = pd.to_numeric(car_df.iloc[2,1], downcast='float')
@@ -58,20 +58,24 @@ dx = track_df['dx']
 
 # Accelerating
 
-track_df['Velocity'] = np.nan
+track_df['Velocity'] = 0
 velocity = track_df['Velocity']
 velocity = pd.Series(data = velocity)
 
-for index in range (0, cx.size):
+for index in range(1,cx.size):
+
     spd_bfr = velocity.iat[index -1]
-
     drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
-    velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx[index] *((Power/spd_bfr) - drag) / car_mass)
 
-velocity = velocity * 3.6
-track_df['Velocity'] = velocity
+    if spd_bfr == 0:
+        velocity.at[index] = np.sqrt1(spd_bfr**2 + 2 * dx[index] * g_lat * 9.81)
+    else:
+        velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx[index] * ((Power/spd_bfr) - drag) / car_mass)
 
-track_df.to_csv(Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'outing.csv'))
+
+print(track_df.head())
+
+# track_df.to_csv(Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'outing.csv'))
 
 # Plotting results
 
