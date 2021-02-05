@@ -34,6 +34,28 @@ isbn_text = StringVar()
 e4 = Entry(window, textvariable = isbn_text)
 e4.grid(row = 1, column = 3)
 
+# Define ListBox
+
+list1 = Listbox(window, height = 6, width = 35)
+list1.grid(row = 2, column = 0, rowspan = 6, columnspan = 2)
+
+# Attach scrollbar to the list
+
+sb1 = Scrollbar(window)
+sb1.grid(row = 2, column = 2, columnspan = 6)
+
+list1.configure(yscrollcommand = sb1.set)
+sb1.configure(command = list1.yview)
+
+# Define Buttons
+b1 = Button(window, text = "Os cara", width = 12)
+b1.grid(row = 2, column = 3)
+
+b2 = Button(window, text = "são", width = 12)
+b2.grid(row = 3, column = 3)
+
+b3 = Button(window, text = "foda", width = 12)
+b3.grid(row = 4, column = 3)
 
 
 window.mainloop()
