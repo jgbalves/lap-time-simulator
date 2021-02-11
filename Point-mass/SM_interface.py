@@ -1,3 +1,5 @@
+#To create an .EXE file, go to terminal and execute pyinstaller --clean --onefile SM_interface.spec
+
 # Importing everything from tkinter
 from tkinter import *
 
