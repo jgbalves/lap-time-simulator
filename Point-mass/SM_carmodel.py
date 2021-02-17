@@ -88,6 +88,7 @@ for t in apexes:
 
     df.at[start, f'Accel {t}'] = spd_apex
 
+    #Accelerating from apex onward
     for index in range (start + 1, cx.size):
         cx_bfr = cx.iat[index -1]
         cx_act = cx.iat[index]
