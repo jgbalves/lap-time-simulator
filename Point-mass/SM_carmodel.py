@@ -72,7 +72,7 @@ corner_names = []
 
 # Accelerating 
 for t in apexes:
-    df[f'Accel {t}'] = np.nan
+    df[f'Accel {t}'] = 0.0
     cs = df[f'Accel {t}']
     cs = pd.Series(data= cs)
 
@@ -100,7 +100,7 @@ for t in apexes:
         s_distance = np.sqrt((cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2)
         drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
 
-        cs.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance *((Power/spd_bfr) - drag) / car_mass)
+        cs.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance * (Power/spd_bfr - drag) / car_mass)
 
 
     for index in range (0, start):
@@ -114,11 +114,12 @@ for t in apexes:
         s_distance = np.sqrt((cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2)
         drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
 
-        cs.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance *((Power/spd_bfr) - drag) / car_mass)
+        
+        cs.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance * (Power/spd_bfr - drag) / car_mass)
 
 # Deccelerating
 for t in apexes:
-    df[f'Decel {t}'] = np.nan
+    df[f'Decel {t}'] = 0.0
     cs = df[f'Decel {t}']
     cs = pd.Series(data= cs)
 
@@ -185,14 +186,6 @@ lt_seconds = lap_time % 60
 
 # Plot time!
 
-# plt.plot(speed_profile, 'r', Label = 'Speed (m/s)')
-# # plot styling
-# plt.legend(loc="upper right")
-# plt.title('[Piloto]: Braia / [Pista]: Interlagos')
-# plt.xlabel('Distance')
-# plt.ylabel('Speed (m/s)')
-# plt.grid()
-
 fig, ax = plt.subplots(2)
 fig.suptitle('[Piloto]: Braia / [Pista]: Interlagos')
 
@@ -202,7 +195,5 @@ plt.text(1, 1, f'{lt_minutes:.0f}:{lt_seconds:.2f}', bbox=dict(facecolor='white'
 
 ax[1].plot(cx,cy,'r')
 ax[1].set_title('Track map')
-
-
 
 plt.show()

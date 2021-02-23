@@ -62,18 +62,22 @@ track_df['Velocity'] = 0.0
 velocity = track_df['Velocity']
 velocity = pd.Series(data = velocity)
 
+dragValues = [0.0]
+
 for index in range(1,cx.size):
 
     spd_bfr = velocity.iat[index -1]
     drag = drag_coef * air_density * (spd_bfr ** 2) * frontal_area / 2
+    dragValues.append(drag)
 
     if spd_bfr == 0:
         velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx[index] * g_lat * 9.81)
     else:
-        velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx[index] * ((Power/spd_bfr) - (drag)) / car_mass)
+        velocity.at[index] = np.sqrt(spd_bfr**2 + 2 * dx[index] * (Power/spd_bfr - drag) / car_mass)
 
+track_df['drag'] = dragValues
 
-print(track_df.head())
+print(track_df[['Velocity','drag']])
 
 # track_df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing_drag.csv')
 # Plotting results
@@ -84,4 +88,4 @@ fig.suptitle('Results')
 
 ax[0].plot(velocity, 'r', Label= 'speed (km/h)')
 
-plt.show()
+#plt.show()

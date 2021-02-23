@@ -1,0 +1,16 @@
+## to create edit new layouts:
+
+designer.exe no terminal
+
+
+
+## to convert the ending result
+
+shift right click on folder > open powershell here
+
+pip install PyQt5 first
+
+then type:
+pyuic5 -x point_mass.ui -o point_mass.py
+
+

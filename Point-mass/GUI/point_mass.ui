@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>915</width>
+    <height>599</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>901</width>
+     <height>581</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Track</string>
+    </attribute>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Choose File</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Drag</string>
+    </attribute>
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>380</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Run</string>
+     </property>
+    </widget>
+    <widget class="QSplitter" name="splitter">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>60</y>
+       <width>137</width>
+       <height>154</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <widget class="QLineEdit" name="lineEdit"/>
+     <widget class="QLineEdit" name="lineEdit_2"/>
+     <widget class="QLineEdit" name="lineEdit_3"/>
+     <widget class="QLineEdit" name="lineEdit_4"/>
+     <widget class="QLineEdit" name="lineEdit_5"/>
+     <widget class="QLineEdit" name="lineEdit_6"/>
+     <widget class="QLineEdit" name="lineEdit_7"/>
+    </widget>
+    <widget class="QSplitter" name="splitter_2">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>60</y>
+       <width>141</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <widget class="QLabel" name="label">
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>Car mass</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::AutoText</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Frontal area</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Drag coefficient</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>GG circle radius</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Power Output</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Transmission efficiency</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Air density</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>Circuit</string>
+    </attribute>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="1">
+      <layout class="QFormLayout" name="formLayout">
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_30">
+         <property name="text">
+          <string>Frontal area</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QSplitter" name="splitter_7">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <widget class="QLabel" name="label_34">
+          <property name="text">
+           <string>Drag coefficient</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_32">
+          <property name="text">
+           <string>GG circle radius</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_35">
+          <property name="text">
+           <string>Power Output</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_33">
+          <property name="text">
+           <string>Transmission efficiency</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_31">
+          <property name="text">
+           <string>Air density</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_29">
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="text">
+          <string>Car mass</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
