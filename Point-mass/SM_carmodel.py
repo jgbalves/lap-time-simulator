@@ -20,6 +20,7 @@ df2.dropna(inplace = True)
 df['cx'] = pd.to_numeric(df['cx'], downcast= 'float')
 df['cy'] = pd.to_numeric(df['cy'], downcast= 'float')
 df['Corner Radius'] = pd.to_numeric(df['Corner Radius'], downcast= 'float')
+
 # Car data
 g_lat = pd.to_numeric(df2.iloc[3,1], downcast='float')
 tranny_efc = pd.to_numeric(df2.iloc[5,1], downcast='float') / 100
@@ -67,10 +68,10 @@ for index in range(0, cx.size):
 df['dx'] = dx
 
 
-# getting note of the corner names, so we can get the minimum values of them all later 
+# getting note of the corner names, so we can get the minimum velocity values of them all later 
 corner_names = []
 
-# Accelerating 
+# Accelerating V = sqrt(Vo² + 2*dx/m * (Power/m - drag))
 for t in apexes:
     df[f'Accel {t}'] = 0.0
     cs = df[f'Accel {t}']
@@ -117,7 +118,7 @@ for t in apexes:
         
         cs.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance * (Power/spd_bfr - drag) / car_mass)
 
-# Deccelerating
+# Deccelerating V = sqrt(Vo² + 2 * dx (mi * g + drag / m))
 for t in apexes:
     df[f'Decel {t}'] = 0.0
     cs = df[f'Decel {t}']

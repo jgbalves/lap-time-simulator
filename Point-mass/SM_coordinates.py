@@ -7,8 +7,9 @@ import numpy as np
 # Sample_track.csv
 # interlagos.csv
 # km.csv
+# SaoPaulo.csv
 
-df = pd.read_csv("C:\\Users\\jgbal\\Github\\lap-time-simulator\\Point-mass\\track_coordinates\\Sample_track.csv", sep = ',', low_memory = False)
+df = pd.read_csv("C:\\Users\\jgbal\\Github\\lap-time-simulator\\Point-mass\\track_coordinates\\SaoPaulo.csv", sep = ',', low_memory = False)
 
 # convert column "cx" and "cy" of a DataFrame
 df["cx"] = pd.to_numeric(df["cx"], downcast = 'float')
