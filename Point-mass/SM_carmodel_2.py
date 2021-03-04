@@ -75,18 +75,10 @@ for t in apexes:
 
 
     for index in range (0, start):
-        cx_bfr = cx.iat[index -1]
-        cx_act = cx.iat[index]
-
-        cy_bfr = cy.iat[index -1]
-        cy_act = cy.iat[index]
         spd_bfr = corner_speed.iat[index -1]
-
-        s_distance = np.sqrt((cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2)
         drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
 
-        
-        corner_speed.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance * (Power/spd_bfr - drag) / car_mass)
+        corner_speed.at[index] = np.sqrt(spd_bfr**2 + 2 * distance_m.iat[index] * (Power/spd_bfr - drag) / car_mass)
 
 # Deccelerating V = sqrt(Vo² + 2 * dx (mi * g + drag / m))
 for t in apexes:
@@ -107,32 +99,16 @@ for t in apexes:
     track_df.at[start, f'Decel {t}'] = spd_apex
 
     for index in range (start - 1, -1, -1):
-        cx_act = cx.iat[index]
-        cx_nxt = cx.iat[index +1]
-
-        cy_act = cy.iat[index]
-        cy_nxt = cy.iat[index +1]
-
         spd_nxt = corner_speed.iat[index +1]
-
-        s_distance = np.sqrt((cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2)
         drag = drag_coef * air_density * spd_nxt ** 2 * frontal_area / 2
 
-        corner_speed.at[index] = np.sqrt(spd_nxt**2 + (2 * s_distance * (9.81 * g_lat + drag/car_mass)))
-
-    for index in range (cx.size - 1, start, -1):
-        cx_act = cx.iat[index]
-        cx_nxt = cx.iat[(index +1)%cx.size]
-
-        cy_act = cy.iat[index]
-        cy_nxt = cy.iat[(index +1)%cx.size]
-
-        spd_nxt = corner_speed.iat[(index +1)%cx.size]
-
-        s_distance = np.sqrt((cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2)
+        corner_speed.at[index] = np.sqrt(spd_nxt**2 + (2 *distance_m.iat[index] * (9.81 * g_lat + drag/car_mass)))
+# Problem at line 108
+    for index in range (distance_m.size - 1, start, -1):
+        spd_nxt = corner_speed.iat[index +1]
         drag = drag_coef * air_density * spd_nxt ** 2 * frontal_area / 2
 
-        corner_speed.at[index] = np.sqrt(spd_nxt**2 + (2 * s_distance * (9.81 * g_lat + drag/car_mass)))
+        corner_speed.at[index] = np.sqrt(spd_nxt**2 + (2 *distance_m.iat[index] * (9.81 * g_lat + drag/car_mass)))
 
     car_df = pd.DataFrame(data= {f'Accel {t}', f'Decel {t}'})
 
@@ -169,7 +145,8 @@ ax[0].set_title('Speed')
 plt.text(1, 1, f'{lt_minutes:.0f}:{lt_seconds:.2f}', bbox=dict(facecolor='white', alpha=0.5))
 
 # Second plot
-ax[1].plot(cx,cy,'r')
-ax[1].set_title('Track map')
+ax[1].plot(distance_m, turn_radius, 'r', Label = 'Turn radius (m)')
+ax[1].set_title('Turn Radius / Distance')
+
 
 plt.show()
