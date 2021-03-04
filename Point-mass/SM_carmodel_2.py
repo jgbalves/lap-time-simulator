@@ -4,78 +4,55 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 
-# Track details & car data
-track_details_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', 'calculated_radiuses.csv')
+## Track details & car data
+track_details_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', 'turn_radius.csv')
 car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'car_data.csv')
 
-df = pd.read_csv(track_details_path)
-df2 = pd.read_csv(car_data_path)
+track_df = pd.read_csv(track_details_path)
+car_df = pd.read_csv(car_data_path)
 
 # Dropping null value columns out to avoid errors
-df2.dropna(inplace = True)
+car_df.dropna(inplace = True)
 
 # converting dataframe colums to numeric to avoid errors
-
 # Track data
-df['cx'] = pd.to_numeric(df['cx'], downcast= 'float')
-df['cy'] = pd.to_numeric(df['cy'], downcast= 'float')
-df['Corner Radius'] = pd.to_numeric(df['Corner Radius'], downcast= 'float')
+track_df['Turn Radius'] = pd.to_numeric(track_df['Turn Radius'], downcast= 'float')
+track_df['Distance']    = pd.to_numeric(track_df['Distance'], downcast= 'float')
 
 # Car data
-g_lat = pd.to_numeric(df2.iloc[3,1], downcast='float')
-tranny_efc = pd.to_numeric(df2.iloc[5,1], downcast='float') / 100
-Power = pd.to_numeric(df2.iloc[4,1], downcast='float') * 745.7 * tranny_efc
-air_density =  pd.to_numeric(df2.iloc[6,1], downcast='float')
-frontal_area = pd.to_numeric(df2.iloc[1,1], downcast='float')
-drag_coef = pd.to_numeric(df2.iloc[2,1], downcast='float')
-car_mass = pd.to_numeric(df2.iloc[0,1], downcast='float')
+g_lat = pd.to_numeric(car_df.iloc[3,1], downcast='float')
+tranny_efc = pd.to_numeric(car_df.iloc[5,1], downcast='float') / 100
+Power = pd.to_numeric(car_df.iloc[4,1], downcast='float') * 745.7 * tranny_efc
+air_density =  pd.to_numeric(car_df.iloc[6,1], downcast='float')
+frontal_area = pd.to_numeric(car_df.iloc[1,1], downcast='float')
+drag_coef = pd.to_numeric(car_df.iloc[2,1], downcast='float')
+car_mass = pd.to_numeric(car_df.iloc[0,1], downcast='float')
 
 
 # Giving the columns variable names to simplify
-cx = df['cx']
-cy = df['cy']
-tr = df['Corner Radius']
+distance_m  = track_df['Distance']
+turn_radius = track_df['Turn Radius']
 
 # Converting Radiuses in arrays so they can be used in local minima function
-tr = np.array(tr)
+turn_radius = np.array(turn_radius)
 # finding local minima (turn apex)
-K = np.r_[True, tr[1:] < tr[:-1]] & np.r_[tr[:-1] < tr[1:], True]
+K = np.r_[True, turn_radius[1:] < turn_radius[:-1]] & np.r_[turn_radius[:-1] < turn_radius[1:], True]
 
 # where are the apexes(indexes)
 apexes = [i for i, x in enumerate(K) if x]
 
 # convert from array to series
-cx = pd.Series(data= cx)
-cy = pd.Series(data= cy)
-tr = pd.Series(data= tr)
-
-# Counting the distances between each point
-
-dx = []
-
-for index in range(0, cx.size):
-        cx_bfr = cx.iat[index -1]
-        cx_act = cx.iat[index]
-
-        cy_bfr = cy.iat[index -1]
-        cy_act = cy.iat[index]
-
-        dx.append(
-            np.sqrt(
-                (cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2
-            )
-        )
-df['dx'] = dx
-
+distance_m = pd.Series(data= distance_m)
+turn_radius = pd.Series(data= turn_radius)
 
 # getting note of the corner names, so we can get the minimum velocity values of them all later 
 corner_names = []
 
 # Accelerating V = sqrt(Vo² + 2*dx/m * (Power/m - drag))
 for t in apexes:
-    df[f'Accel {t}'] = 0.0
-    cs = df[f'Accel {t}']
-    cs = pd.Series(data= cs)
+    track_df[f'Accel {t}'] = 0.0
+    corner_speed = track_df[f'Accel {t}']
+    corner_speed = pd.Series(data= corner_speed)
 
     # Putting the corner names in the list
     corner_names.append(f'Accel {t}')
@@ -84,24 +61,17 @@ for t in apexes:
           
     # Simple corner velocity (centripetal) V = (g_lat * 9,81 * Radius) ^ 1/2 
     spd_apex = np.sqrt(
-        g_lat * df.at[start, 'Corner Radius'] * 9.81
+        g_lat * track_df.at[start, 'Turn Radius'] * 9.81
     )
 
-    df.at[start, f'Accel {t}'] = spd_apex
+    track_df.at[start, f'Accel {t}'] = spd_apex
 
     #Accelerating from apex onward
-    for index in range (start + 1, cx.size):
-        cx_bfr = cx.iat[index -1]
-        cx_act = cx.iat[index]
-
-        cy_bfr = cy.iat[index -1]
-        cy_act = cy.iat[index]
-        spd_bfr = cs.iat[index -1]
-
-        s_distance = np.sqrt((cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2)
+    for index in range (start + 1, distance_m.size):
+        spd_bfr = corner_speed.iat[index -1]
         drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
 
-        cs.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance * (Power/spd_bfr - drag) / car_mass)
+        corner_speed.at[index] = np.sqrt(spd_bfr**2 + 2 * distance_m.iat[index] * (Power/spd_bfr - drag) / car_mass)
 
 
     for index in range (0, start):
@@ -110,19 +80,19 @@ for t in apexes:
 
         cy_bfr = cy.iat[index -1]
         cy_act = cy.iat[index]
-        spd_bfr = cs.iat[index -1]
+        spd_bfr = corner_speed.iat[index -1]
 
         s_distance = np.sqrt((cx_act - cx_bfr)**2 + (cy_act - cy_bfr)**2)
         drag = drag_coef * air_density * spd_bfr ** 2 * frontal_area / 2
 
         
-        cs.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance * (Power/spd_bfr - drag) / car_mass)
+        corner_speed.at[index] = np.sqrt(spd_bfr**2 + 2 * s_distance * (Power/spd_bfr - drag) / car_mass)
 
 # Deccelerating V = sqrt(Vo² + 2 * dx (mi * g + drag / m))
 for t in apexes:
-    df[f'Decel {t}'] = 0.0
-    cs = df[f'Decel {t}']
-    cs = pd.Series(data= cs)
+    track_df[f'Decel {t}'] = 0.0
+    corner_speed = track_df[f'Decel {t}']
+    corner_speed = pd.Series(data= corner_speed)
 
     # Putting the corner names in the list
     corner_names.append(f'Decel {t}')
@@ -131,10 +101,10 @@ for t in apexes:
           
     # Simple corner velocity (centripetal) V = (g_lat * 9,81 * Radius) ^ 1/2 
     spd_apex = np.sqrt(
-        g_lat * df.at[start, 'Corner Radius'] * 9.81
+        g_lat * track_df.at[start, 'Turn Radius'] * 9.81
     )
 
-    df.at[start, f'Decel {t}'] = spd_apex
+    track_df.at[start, f'Decel {t}'] = spd_apex
 
     for index in range (start - 1, -1, -1):
         cx_act = cx.iat[index]
@@ -143,12 +113,12 @@ for t in apexes:
         cy_act = cy.iat[index]
         cy_nxt = cy.iat[index +1]
 
-        spd_nxt = cs.iat[index +1]
+        spd_nxt = corner_speed.iat[index +1]
 
         s_distance = np.sqrt((cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2)
         drag = drag_coef * air_density * spd_nxt ** 2 * frontal_area / 2
 
-        cs.at[index] = np.sqrt(spd_nxt**2 + (2 * s_distance * (9.81 * g_lat + drag/car_mass)))
+        corner_speed.at[index] = np.sqrt(spd_nxt**2 + (2 * s_distance * (9.81 * g_lat + drag/car_mass)))
 
     for index in range (cx.size - 1, start, -1):
         cx_act = cx.iat[index]
@@ -157,29 +127,29 @@ for t in apexes:
         cy_act = cy.iat[index]
         cy_nxt = cy.iat[(index +1)%cx.size]
 
-        spd_nxt = cs.iat[(index +1)%cx.size]
+        spd_nxt = corner_speed.iat[(index +1)%cx.size]
 
         s_distance = np.sqrt((cx_nxt - cx_act)**2 + (cy_nxt - cy_act)**2)
         drag = drag_coef * air_density * spd_nxt ** 2 * frontal_area / 2
 
-        cs.at[index] = np.sqrt(spd_nxt**2 + (2 * s_distance * (9.81 * g_lat + drag/car_mass)))
+        corner_speed.at[index] = np.sqrt(spd_nxt**2 + (2 * s_distance * (9.81 * g_lat + drag/car_mass)))
 
-    df2 = pd.DataFrame(data= {f'Accel {t}', f'Decel {t}'})
+    car_df = pd.DataFrame(data= {f'Accel {t}', f'Decel {t}'})
 
 
 # making a report
-# df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
+# track_df.to_corner_speedv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.corner_speedv')
 
 # getting all the minimum speeds and organizing them in a signal
-turns = df[corner_names]
+turns = track_df[corner_names]
 speed_profile = turns.min(axis = 1)
 speed_profile_kph = speed_profile * 3.6
 
 # lap time
-df['speed'] = speed_profile
-df['speed (km/h)'] = speed_profile_kph
-df['t(s)'] = df['dx'] / df['speed']
-lap_time = df['t(s)'].sum()
+track_df['speed'] = speed_profile
+track_df['speed (km/h)'] = speed_profile_kph
+track_df['t(s)'] = track_df['dx'] / track_df['speed']
+lap_time = track_df['t(s)'].sum()
 
 lt_minutes = lap_time//60
 lt_seconds = lap_time % 60
