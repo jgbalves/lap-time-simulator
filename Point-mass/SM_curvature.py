@@ -10,6 +10,8 @@
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
+from scipy import signal
+
 
 ## Building the dataframe
 
@@ -34,10 +36,15 @@ distance_m = source_df['Distance']
 ## Creating the radius signal
 turn_radius = speed_ms ** 2 / g_lat_ms2
 
+# Filtering the signal
+b, a = signal.butter(1, 3, 'low', analog= True)
+turn_radius = signal.filtfilt(b, a, turn_radius)
+
 ## Output
 # Output dataframe
 output_df = pd.DataFrame(data= {'Distance':distance_m, 'Turn Radius':turn_radius})
 
+'''
 #exporting it
 output_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', 'turn_radius.csv')
 output_df.to_csv(output_path)
@@ -58,5 +65,3 @@ ax[0].set_title('Turn Radius / Distance')
 ax[0].set_ylim([-200, 200]) 
 
 plt.show()
-
-'''
