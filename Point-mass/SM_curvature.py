@@ -37,8 +37,11 @@ distance_m = source_df['Distance']
 turn_radius = speed_ms ** 2 / g_lat_ms2
 
 # Filtering the signal
-b, a = signal.butter(1, 3, 'low', analog= True)
-turn_radius = signal.filtfilt(b, a, turn_radius)
+fs = 50 #Sampling frequency, according to the source_file sampling frequency
+fc = 3 #cutoff frequency, lower values filter more
+w = fc / (fs / 2) #normalized frequency
+b, a = signal.butter(5, w, 'low')
+filtered_turn_radius = signal.filtfilt(b, a, turn_radius)
 
 ## Output
 # Output dataframe
@@ -57,7 +60,8 @@ fig.suptitle('Turn Radius Profile')
 
 # first plot
 
-ax[0].plot(distance_m, turn_radius, 'r', Label = 'Turn radius (m)')
+ax[0].plot(distance_m, turn_radius, 'r', Label = 'raw (m)')
+ax[0].plot(distance_m, filtered_turn_radius, 'b', Label = 'filtered (m)')
 ax[0].set_title('Turn Radius / Distance')
 
 #putting limit on the y axis
