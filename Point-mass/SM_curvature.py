@@ -44,18 +44,13 @@ filtered_g_lat_ms2 = signal.filtfilt(b, a, g_lat_ms2)
 
 ## Creating the radius signal
 turn_radius = speed_ms ** 2 / filtered_g_lat_ms2
-
-for i in turn_radius:
-    if turn_radius[i] > 200:
-        turn_radius_norm = np.inf
-    else:
-        turn_radius_norm = np.sqrt(turn_radius ** 2)
+turn_radius_norm = np.sqrt(turn_radius ** 2)
 
 ## Output
 # Output dataframe
-output_df = pd.DataFrame(data= {'Distance':distance_m, 'Turn Radius':turn_radius})
+output_df = pd.DataFrame(data= {'Distance':distance_m, 'Turn Radius':turn_radius_norm})
 
-'''
+
 #exporting it
 output_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', 'turn_radius.csv')
 output_df.to_csv(output_path)
@@ -83,3 +78,4 @@ ax[2].plot(distance_m, turn_radius_norm, 'r', Label = 'raw (m)')
 
 
 plt.show()
+'''
