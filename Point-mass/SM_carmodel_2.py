@@ -36,36 +36,53 @@ turn_radius = track_df['Turn Radius']
 #adopting apex at index 349
 start = 349
 
+## Accelerating Section
 # Simple corner velocity (centripetal): V = (g_lat * 9,81 * Radius) ^ 1/2 
 speed_apex = np.sqrt(g_lat * 9.81 * track_df.at[start, 'Turn Radius'])
+
+# Organizing the accelerations in columns
 track_df.at[start, f'Accel {start}'] = speed_apex
 corner_speed = track_df[f'Accel {start}']
 
-
 #accelerating from apex: V = sqrt(Vo² + 2*dx/m * (Power/Vo - drag))
-
 for index in range(start + 1, distance_m.size):
     dx = distance_m[index] - distance_m[index - 1]
     speed_bfr = corner_speed.iat[index - 1]
     car_drag = drag_coef * air_density * speed_bfr ** 2 * frontal_area / 2
-    track_df.at[index, f'Accel {start}'] = np.sqrt(
+    corner_speed.at[index] = np.sqrt(
         speed_bfr ** 2 + 2 * dx / car_mass * (Power/speed_bfr - car_drag)
         )
 
-for index in range(0, start - 1):
-    track_df.at[index, f'Accel {start}'] = np.sqrt(
+for index in range(0, start):
+    corner_speed.at[index] = np.sqrt(
         speed_bfr ** 2 + 2 * dx / car_mass * (Power/speed_bfr - car_drag)
         )
 
+## Braking Section
 
-'''
+# Organizing the decelerations in columns
+track_df.at[start, f'Decel {start}'] = speed_apex
+corner_speed = track_df[f'Decel {start}']
+
+#Decelerating from apex: V = sqrt(Vo² - 2 * dx (mi * g + drag / m))
+for index in range(start -1, -1, -1):
+    dx = distance_m[index] - distance_m[index + 1]
+    speed_nxt = corner_speed.iat[index + 1]
+    car_drag = drag_coef * air_density * speed_nxt ** 2 * frontal_area / 2
+    corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (g_lat * 9.81 + car_drag/car_mass))
+
+for index in range(distance_m.size - 1, start, -1):
+    corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (g_lat * 9.81 + car_drag/car_mass))    
+
+
 
 track_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'outing_test.csv'))
 
-'''
+
 
 fig, report_plot = plt.subplots(2)
 
-report_plot[0].plot(corner_speed)
+report_plot[0].plot(track_df[f'Accel {start}'], 'r')
+report_plot[0].plot(track_df[f'Decel {start}'], 'b')
 
 plt.show()
