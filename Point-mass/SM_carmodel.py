@@ -71,7 +71,7 @@ df['dx'] = dx
 # getting note of the corner names, so we can get the minimum velocity values of them all later 
 corner_names = []
 
-# Accelerating V = sqrt(Vo² + 2*dx/m * (Power/m - drag))
+# Accelerating V = sqrt(Vo² + 2*dx/m * (Power/Vo - drag))
 for t in apexes:
     df[f'Accel {t}'] = 0.0
     cs = df[f'Accel {t}']
