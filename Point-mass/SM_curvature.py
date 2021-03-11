@@ -50,7 +50,7 @@ turn_radius_norm = np.sqrt(turn_radius ** 2)
 # Output dataframe
 output_df = pd.DataFrame(data= {'Distance':distance_m, 'Turn Radius':turn_radius_norm})
 
-
+'''
 #exporting it
 output_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', 'turn_radius.csv')
 output_df.to_csv(output_path)
@@ -73,9 +73,8 @@ ax[1].set_ylim([-200, 200]) #putting limit on the y axis
 
 # third plot
 ax[2].plot(distance_m, turn_radius_norm, 'r', Label = 'raw (m)')
-
+ax[2].set_ylim([0, 200]) #putting limit on the y axis
 
 
 
 plt.show()
-'''
