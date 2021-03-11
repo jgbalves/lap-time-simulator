@@ -114,7 +114,7 @@ for t in apexes:
 
 
 # making a report
-track_df.to_corner_speedv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
+# track_df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
 
 # getting all the minimum speeds and organizing them in a signal
 turns = track_df[corner_names]
