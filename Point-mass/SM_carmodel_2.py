@@ -105,7 +105,7 @@ for t in apexes:
         corner_speed.at[index] = np.sqrt(spd_nxt**2 + (2 *distance_m.iat[index] * (9.81 * g_lat + drag/car_mass)))
 # Problem at line 108
     for index in range (distance_m.size - 1, start, -1):
-        spd_nxt = corner_speed.iat[index +1]
+        spd_nxt = corner_speed.iat[(index + 1)%distance_m.size]
         drag = drag_coef * air_density * spd_nxt ** 2 * frontal_area / 2
 
         corner_speed.at[index] = np.sqrt(spd_nxt**2 + (2 *distance_m.iat[index] * (9.81 * g_lat + drag/car_mass)))
@@ -114,7 +114,7 @@ for t in apexes:
 
 
 # making a report
-# track_df.to_corner_speedv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.corner_speedv')
+track_df.to_corner_speedv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\outing.csv')
 
 # getting all the minimum speeds and organizing them in a signal
 turns = track_df[corner_names]
@@ -124,7 +124,7 @@ speed_profile_kph = speed_profile * 3.6
 # lap time
 track_df['speed'] = speed_profile
 track_df['speed (km/h)'] = speed_profile_kph
-track_df['t(s)'] = track_df['dx'] / track_df['speed']
+track_df['t(s)'] = track_df['Distance'] / track_df['speed']
 lap_time = track_df['t(s)'].sum()
 
 lt_minutes = lap_time//60
