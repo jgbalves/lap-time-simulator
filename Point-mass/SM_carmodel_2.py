@@ -90,18 +90,20 @@ for start in apexes:
 # getting the minimum speed of all columns (turns) and creating just one column
 turns = track_df[corner_names]
 speed_profile = turns.min(axis = 1)
+speed_profile_kph = speed_profile * 3.6
 
-'''
-track_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'outing_test.csv'))
-'''
+lap_time = distance_m / speed_profile
+lap_time = lap_time.sum()
 
+## Report exporting
 
+track_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'outing.csv'))
+
+## Plotting
 fig, report_plot = plt.subplots(2)
 
 report_plot[0].plot(distance_m, turn_radius, 'r')
 report_plot[0].set_ylim([0, 200])
-report_plot[1].plot(distance_m, speed_profile, 'r')
+report_plot[1].plot(distance_m, speed_profile_kph, 'r')
 
-
-
-plt.show()
+# plt.show()
