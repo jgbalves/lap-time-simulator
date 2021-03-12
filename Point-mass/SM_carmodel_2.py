@@ -33,56 +33,75 @@ car_mass = pd.to_numeric(car_df.iloc[0,1], downcast='float')
 distance_m  = track_df['Distance']
 turn_radius = track_df['Turn Radius']
 
-#adopting apex at index 349
-start = 349
+## Finding apexes (local minima of radiuses)
 
-## Accelerating Section
-# Simple corner velocity (centripetal): V = (g_lat * 9,81 * Radius) ^ 1/2 
-speed_apex = np.sqrt(g_lat * 9.81 * track_df.at[start, 'Turn Radius'])
+# Converting Radiuses in arrays so they can be used in local minima function
+turn_radius = np.array(turn_radius)
+# finding local minima (turn apex)
+K = np.r_[True, turn_radius[1:] < turn_radius[:-1]] & np.r_[turn_radius[:-1] < turn_radius[1:], True]
+# Taking note of apex positions
+apexes = [i for i, x in enumerate(K) if x]
+# Taking note of turn names
+corner_names = []
 
-# Organizing the accelerations in columns
-track_df.at[start, f'Accel {start}'] = speed_apex
-corner_speed = track_df[f'Accel {start}']
+## Calculating velocities at apex, then accelerating and braking from them
+for start in apexes:
+    # Simple corner velocity (centripetal): V = (g_lat * 9,81 * Radius) ^ 1/2 
+    speed_apex = np.sqrt(g_lat * 9.81 * track_df.at[start, 'Turn Radius'])
 
-#accelerating from apex: V = sqrt(Vo² + 2*dx/m * (Power/Vo - drag))
-for index in range(start + 1, distance_m.size):
-    dx = distance_m[index] - distance_m[index - 1]
-    speed_bfr = corner_speed.iat[index - 1]
-    car_drag = drag_coef * air_density * speed_bfr ** 2 * frontal_area / 2
-    corner_speed.at[index] = np.sqrt(
-        speed_bfr ** 2 + 2 * dx / car_mass * (Power/speed_bfr - car_drag)
-        )
+    ## Accelerating Section
 
-for index in range(0, start):
-    corner_speed.at[index] = np.sqrt(
-        speed_bfr ** 2 + 2 * dx / car_mass * (Power/speed_bfr - car_drag)
-        )
+    # Organizing the accelerations in columns
+    track_df.at[start, f'Accel {start}'] = speed_apex
+    corner_speed = track_df[f'Accel {start}']
+    corner_names.append(f'Accel {start}')
 
-## Braking Section
+    #accelerating from apex: V = sqrt(Vo² + 2*dx/m * (Power/Vo - drag))
+    for index in range(start + 1, distance_m.size):
+        dx = distance_m[index] - distance_m[index - 1]
+        speed_bfr = corner_speed.iat[index - 1]
+        car_drag = drag_coef * air_density * speed_bfr ** 2 * frontal_area / 2
+        corner_speed.at[index] = np.sqrt(
+            speed_bfr ** 2 + 2 * dx / car_mass * (Power/speed_bfr - car_drag)
+            )
 
-# Organizing the decelerations in columns
-track_df.at[start, f'Decel {start}'] = speed_apex
-corner_speed = track_df[f'Decel {start}']
+    for index in range(0, start):
+        corner_speed.at[index] = np.sqrt(
+            speed_bfr ** 2 + 2 * dx / car_mass * (Power/speed_bfr - car_drag)
+            )
 
-#Decelerating from apex: V = sqrt(Vo² - 2 * dx (mi * g + drag / m))
-for index in range(start -1, -1, -1):
-    dx = distance_m[index] - distance_m[index + 1]
-    speed_nxt = corner_speed.iat[index + 1]
-    car_drag = drag_coef * air_density * speed_nxt ** 2 * frontal_area / 2
-    corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (g_lat * 9.81 + car_drag/car_mass))
+    ## Braking Section
 
-for index in range(distance_m.size - 1, start, -1):
-    corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (g_lat * 9.81 + car_drag/car_mass))    
+    # Organizing the decelerations in columns
+    track_df.at[start, f'Decel {start}'] = speed_apex
+    corner_speed = track_df[f'Decel {start}']
+    corner_names.append(f'Decel {start}')
 
+    #Decelerating from apex: V = sqrt(Vo² - 2 * dx (mi * g + drag / m))
+    for index in range(start -1, -1, -1):
+        dx = distance_m[index] - distance_m[(index + 1)%distance_m.size]
+        speed_nxt = corner_speed.iat[(index + 1)%distance_m.size]
+        car_drag = drag_coef * air_density * speed_nxt ** 2 * frontal_area / 2
+        corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (g_lat * 9.81 + car_drag/car_mass))
 
+    for index in range(distance_m.size - 1, start, -1):
+        corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (g_lat * 9.81 + car_drag/car_mass))    
 
+# getting the minimum speed of all columns (turns) and creating just one column
+turns = track_df[corner_names]
+speed_profile = turns.min(axis = 1)
+
+'''
 track_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'outing_test.csv'))
-
+'''
 
 
 fig, report_plot = plt.subplots(2)
 
-report_plot[0].plot(track_df[f'Accel {start}'], 'r')
-report_plot[0].plot(track_df[f'Decel {start}'], 'b')
+report_plot[0].plot(distance_m, turn_radius, 'r')
+report_plot[0].set_ylim([0, 200])
+report_plot[1].plot(distance_m, speed_profile, 'r')
+
+
 
 plt.show()
