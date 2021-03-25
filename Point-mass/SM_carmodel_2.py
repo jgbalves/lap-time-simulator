@@ -129,8 +129,11 @@ export_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass',
 ## Plotting
 fig, report_plot = plt.subplots(2)
 
+# First plot (turn radiuses)
 report_plot[0].plot(distance_m, turn_radius, 'r')
 report_plot[0].set_ylim([0, 200])
+
+# Second plot (speed profile)
 report_plot[1].plot(distance_m, speed_profile_kph, 'r')
 
 # Lap time stamp
