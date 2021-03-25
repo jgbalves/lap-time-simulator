@@ -1,3 +1,17 @@
+## ==============================================================================
+## 
+##   _____ ____  ________________     __  ___________________  _____________ 
+##  / ___// __ \/ ____/ ____/ __ \   /  |/  / ____/_  __/ __ \/  _/ ____/   |
+##  \__ \/ /_/ / __/ / __/ / / / /  / /|_/ / __/   / / / /_/ // // /   / /| |
+## ___/ / ____/ /___/ /___/ /_/ /  / /  / / /___  / / / _, _// // /___/ ___ |
+##/____/_/   /_____/_____/_____/  /_/  /_/_____/ /_/ /_/ |_/___/\____/_/  |_|
+##                                                                        
+##                           www.speedmetrica.com
+##
+## ==============================================================================
+## Point mass lap time simulator, going through a curvature section
+
+## Importing libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -92,12 +106,25 @@ turns = track_df[corner_names]
 speed_profile = turns.min(axis = 1)
 speed_profile_kph = speed_profile * 3.6
 
-lap_time = distance_m / speed_profile
-lap_time = lap_time.sum()
+#calculating the distance steps
+for index in range(1, distance_m.size):
+    dx = distance_m[index] - distance_m[(index - 1)]
+    track_df.at[0, 'dx'] = 0.0
+    track_df.at[index, 'dx'] = dx
+
+# lap time
+track_df['speed'] = speed_profile
+track_df['speed (km/h)'] = speed_profile_kph
+
+track_df['t(s)'] = track_df['dx'] / track_df['speed']
+lap_time = track_df['t(s)'].sum()
+
+lt_minutes = lap_time//60
+lt_seconds = lap_time % 60
 
 ## Report exporting
-
-track_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'outing.csv'))
+export_df = track_df[['Turn Radius', 'Distance', 'speed', 'speed (km/h)', 'dx', 't(s)']]
+export_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'outing.csv'))
 
 ## Plotting
 fig, report_plot = plt.subplots(2)
@@ -106,4 +133,7 @@ report_plot[0].plot(distance_m, turn_radius, 'r')
 report_plot[0].set_ylim([0, 200])
 report_plot[1].plot(distance_m, speed_profile_kph, 'r')
 
-# plt.show()
+# Lap time stamp
+plt.text(1, 1, f'{lt_minutes:.0f}:{lt_seconds:.2f}', bbox=dict(facecolor='white', alpha=0.5))
+
+plt.show()
