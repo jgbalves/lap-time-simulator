@@ -39,8 +39,8 @@ class Track():
         self.csv_name = csv_name
 
         speeds_df = pd.read_csv(track_details_path)
-        self.distance_m = pd.to_numeric(speeds_df['Turn Radius'], downcast= 'float')
-        self.turn_radius= pd.to_numeric(speeds_df['Distance'], downcast= 'float')
+        self.distance_m = pd.to_numeric(speeds_df['Distance'], downcast= 'float')
+        self.turn_radius= pd.to_numeric(speeds_df['Turn Radius'], downcast= 'float')
 
         ## Finding apexes (local minima of radiuses)
         # Converting Radiuses in arrays so they can be used in local minima function
@@ -49,16 +49,17 @@ class Track():
         K = np.r_[True, self.turn_radius[1:] < self.turn_radius[:-1]] & np.r_[self.turn_radius[:-1] < self.turn_radius[1:], True]
         # Taking note of apex positions
         self.apexes = [i for i, x in enumerate(K) if x]
-        # Taking note of turn names
+        
 
 
 def simulate(car:Car, track:Track):
     ## Calculating velocities at apex, then accelerating and braking from them
+    # Taking note of turn names
     corner_names = []
-    speeds_df = pd.DataFrame()
+    speeds_df = pd.DataFrame(data={'dummy_col': [0] * track.distance_m.size})
     for start in track.apexes:
         # Simple corner velocity (centripetal): V = (g_lat * 9,81 * Radius) ^ 1/2 
-        speed_apex = np.sqrt(car.g_lat * 9.81 * track.turn_radius.at[start])
+        speed_apex = np.sqrt(car.g_lat * 9.81 * track.turn_radius[start])
 
         ## Accelerating Section
         # Organizing the accelerations in columns
@@ -68,6 +69,7 @@ def simulate(car:Car, track:Track):
 
         #accelerating from apex: V = sqrt(Vo² + 2*dx/m * (Power/Vo - drag))
         for index in range(start + 1, track.distance_m.size):
+
             dx = track.distance_m[index] - track.distance_m[index - 1]
             speed_bfr = corner_speed.iat[index - 1]
             car_drag = car.drag_coef * car.air_density * speed_bfr ** 2 * car.frontal_area / 2
@@ -76,6 +78,10 @@ def simulate(car:Car, track:Track):
                 )
 
         for index in range(0, start):
+
+            dx = track.distance_m[index] - track.distance_m[index - 1]
+            speed_bfr = corner_speed.iat[index - 1]
+            car_drag = car.drag_coef * car.air_density * speed_bfr ** 2 * car.frontal_area / 2
             corner_speed.at[index] = np.sqrt(
                 speed_bfr ** 2 + 2 * dx / car.car_mass * (car.power/speed_bfr - car_drag)
                 )
@@ -95,6 +101,9 @@ def simulate(car:Car, track:Track):
             corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (car.g_lat * 9.81 + car_drag/car.car_mass))
 
         for index in range(track.distance_m.size - 1, start, -1):
+            dx = track.distance_m[index] - track.distance_m[(index + 1)%track.distance_m.size]
+            speed_nxt = corner_speed.iat[(index + 1)%track.distance_m.size]
+            car_drag = car.drag_coef * car.air_density * speed_nxt ** 2 * car.frontal_area / 2
             corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (car.g_lat * 9.81 + car_drag/car.car_mass))    
 
         #calculating the distance steps
@@ -107,13 +116,13 @@ def simulate(car:Car, track:Track):
         # getting the minimum speed of all columns (turns) and creating just one column
         speeds_df['speed'] = speeds_df[corner_names].min(axis = 1)
         speeds_df['speed (km/h)'] = speeds_df['speed'] * 3.6
-
         speeds_df['t(s)'] = speeds_df['dx'] / speeds_df['speed']
 
-        #report_df
+        export_df = speeds_df[['speed', 'speed (km/h)', 'dx', 't(s)']]
+        return export_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', f'{car.csv_name}_outing.csv'))
 
-car = Car('car_data_1.csv')
+car = Car('car_data.csv')
 track = Track('turn_radius.csv')
 
-
 simulate(car,track)
+# import ipdb; ipdb.set_trace()
