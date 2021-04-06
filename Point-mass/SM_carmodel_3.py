@@ -33,6 +33,7 @@ class Car():
         self.drag_coef = pd.to_numeric(car_df.iloc[2,1], downcast='float')
         self.car_mass = pd.to_numeric(car_df.iloc[0,1], downcast='float')
 
+
 class Track():
     def __init__(self, csv_name):
         track_details_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', csv_name)
@@ -50,13 +51,12 @@ class Track():
         # Taking note of apex positions
         self.apexes = [i for i, x in enumerate(K) if x]
         
-
-
 def simulate(car:Car, track:Track):
     ## Calculating velocities at apex, then accelerating and braking from them
     # Taking note of turn names
     corner_names = []
     speeds_df = pd.DataFrame(data={'dummy_col': [0] * track.distance_m.size})
+
     for start in track.apexes:
         # Simple corner velocity (centripetal): V = (g_lat * 9,81 * Radius) ^ 1/2 
         speed_apex = np.sqrt(car.g_lat * 9.81 * track.turn_radius[start])
@@ -69,7 +69,6 @@ def simulate(car:Car, track:Track):
 
         #accelerating from apex: V = sqrt(Vo² + 2*dx/m * (Power/Vo - drag))
         for index in range(start + 1, track.distance_m.size):
-
             dx = track.distance_m[index] - track.distance_m[index - 1]
             speed_bfr = corner_speed.iat[index - 1]
             car_drag = car.drag_coef * car.air_density * speed_bfr ** 2 * car.frontal_area / 2
@@ -78,8 +77,7 @@ def simulate(car:Car, track:Track):
                 )
 
         for index in range(0, start):
-
-            dx = track.distance_m[index] - track.distance_m[index - 1]
+            dx = track.distance_m[index] - track.distance_m[(index - 1)%track.distance_m.size]
             speed_bfr = corner_speed.iat[index - 1]
             car_drag = car.drag_coef * car.air_density * speed_bfr ** 2 * car.frontal_area / 2
             corner_speed.at[index] = np.sqrt(
@@ -101,7 +99,10 @@ def simulate(car:Car, track:Track):
             corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (car.g_lat * 9.81 + car_drag/car.car_mass))
 
         for index in range(track.distance_m.size - 1, start, -1):
-            dx = track.distance_m[index] - track.distance_m[(index + 1)%track.distance_m.size]
+            if index == track.distance_m.size - 1:
+                dx = 0
+            else:
+                dx = track.distance_m[index] - track.distance_m[(index + 1)%track.distance_m.size]
             speed_nxt = corner_speed.iat[(index + 1)%track.distance_m.size]
             car_drag = car.drag_coef * car.air_density * speed_nxt ** 2 * car.frontal_area / 2
             corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (car.g_lat * 9.81 + car_drag/car.car_mass))    
@@ -125,4 +126,4 @@ car = Car('car_data.csv')
 track = Track('turn_radius.csv')
 
 simulate(car,track)
-# import ipdb; ipdb.set_trace()
+
