@@ -14,17 +14,16 @@
 ## Importing libraries
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from pathlib import Path
 
 class Car():
     def __init__(self, csv_name):
         car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', csv_name)
         self.csv_name = csv_name
+        self.car_name = Path(car_data_path).stem
 
         car_df = pd.read_csv(car_data_path)
         car_df.dropna(inplace = True)
-
         self.g_lat = pd.to_numeric(car_df.iloc[3,1], downcast='float')
         self.tranny_efc = pd.to_numeric(car_df.iloc[5,1], downcast='float') / 100
         self.power = pd.to_numeric(car_df.iloc[4,1], downcast='float') * 745.7 * self.tranny_efc
@@ -38,6 +37,7 @@ class Track():
     def __init__(self, csv_name):
         track_details_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', csv_name)
         self.csv_name = csv_name
+        self.track_name = Path(track_details_path).stem
 
         speeds_df = pd.read_csv(track_details_path)
         self.distance_m = pd.to_numeric(speeds_df['Distance'], downcast= 'float')
@@ -120,10 +120,9 @@ def simulate(car:Car, track:Track):
         speeds_df['t(s)'] = speeds_df['dx'] / speeds_df['speed']
 
         export_df = speeds_df[['speed', 'speed (km/h)', 'dx', 't(s)']]
-        return export_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', f'{car.csv_name}_outing.csv'))
+        return export_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', f'{car.car_name}_{track.track_name}_outing.csv'))
 
 car = Car('car_data.csv')
 track = Track('turn_radius.csv')
 
 simulate(car,track)
-
