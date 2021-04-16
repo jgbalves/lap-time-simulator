@@ -9,7 +9,7 @@
 ##                           www.speedmetrica.com
 ##
 ## ==============================================================================
-## Calculating curvature from longitudinal speed and accelerations
+## Plotting vehicle speeds to compare the results
 
 
 ## Importing libraries
@@ -26,28 +26,16 @@ class Car_outing():
         self.speed_kph = car_df['speed (km/h)']
         self.distance = car_df['Distance']
 
-def print(car_1, car_2, car_3):
-    
-    fig, report_plot = plt.subplots(2)
-    ## Plotting
-    fig, report_plot = plt.subplots(2)
+def compare(car_1, car_2, car_3):
 
-    # First plot (turn radiuses)
-    report_plot[0].plot(car_1.distance, turn_radius, 'r')
-    report_plot[0].set_ylim([0, 200])
-
-    # Second plot (speed profile)
-    report_plot[1].plot(distance_m, speed_profile_kph, 'r')
-
-    # Lap time stamp
-    plt.text(1, 1, f'{lt_minutes:.0f}:{lt_seconds:.2f}', bbox=dict(facecolor='white', alpha=0.5))
+    ## Plotting    
+    fig, speed_plot = plt.subplots()
+    speed_plot.plot(car_1.distance, car_1.speed_kph, car_1.distance, car_2.speed_kph, car_1.distance, car_3.speed_kph)
 
     plt.show()
-    pass
 
-car_1 = Car_outing()
-car_2 = Car_outing()
-car_3 = Car_outing()
+car_1 = Car_outing('car_data_1_turn_radius_outing.csv')
+car_2 = Car_outing('car_data_2_turn_radius_outing.csv')
+car_3 = Car_outing('car_data_3_turn_radius_outing.csv')
 
-
-print()
+compare(car_1, car_2, car_3)
