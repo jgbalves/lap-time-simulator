@@ -70,7 +70,7 @@ for start in apexes:
     track_df.at[start, f'Accel {start}'] = speed_apex
     corner_speed = track_df[f'Accel {start}']
     corner_names.append(f'Accel {start}')
-
+    import ipdb; ipdb.set_trace()
     #accelerating from apex: V = sqrt(Vo² + 2*dx/m * (Power/Vo - drag))
     for index in range(start + 1, distance_m.size):
         dx = distance_m[index] - distance_m[index - 1]
