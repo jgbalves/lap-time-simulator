@@ -47,9 +47,9 @@ def compare(car_1, car_2, car_3):
     lt_minutes_3 = lap_time_3//60
     lt_seconds_3 = lap_time_3 % 60
     
-    fig.text(0.7, 0.3, f'{lt_minutes_1:.0f}:{lt_seconds_1:.2f}', bbox=dict(facecolor='black', alpha=0.5))
-    fig.text(0.7, 0.4, f'{lt_minutes_2:.0f}:{lt_seconds_2:.2f}', bbox=dict(facecolor='green', alpha=0.5))
-    fig.text(0.7, 0.5, f'{lt_minutes_3:.0f}:{lt_seconds_3:.2f}', bbox=dict(facecolor='red', alpha=0.5))
+    fig.text(0.91, 0.3, f'{lt_minutes_1:.0f}:{lt_seconds_1:.2f}', bbox=dict(facecolor='black', alpha=0.5))
+    fig.text(0.91, 0.4, f'{lt_minutes_2:.0f}:{lt_seconds_2:.2f}', bbox=dict(facecolor='green', alpha=0.5))
+    fig.text(0.91, 0.5, f'{lt_minutes_3:.0f}:{lt_seconds_3:.2f}', bbox=dict(facecolor='red', alpha=0.5))
 
     plt.show()
 
