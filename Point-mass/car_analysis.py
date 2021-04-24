@@ -25,12 +25,31 @@ class Car_outing():
         car_df = pd.read_csv(car_data_path)
         self.speed_kph = car_df['speed (km/h)']
         self.distance = car_df['Distance']
+        self.time = car_df['t(s)']
 
 def compare(car_1, car_2, car_3):
 
     ## Plotting    
+    # Plot image
     fig, speed_plot = plt.subplots()
-    speed_plot.plot(car_1.distance, car_1.speed_kph, car_1.distance, car_2.speed_kph, car_1.distance, car_3.speed_kph)
+    speed_plot.plot(car_1.distance, car_1.speed_kph, 'b')
+    speed_plot.plot(car_1.distance, car_2.speed_kph, 'g')
+    speed_plot.plot(car_1.distance, car_3.speed_kph, 'r')
+
+    # Time stamp
+    lap_time_1 = car_1.time.sum()
+    lap_time_2 = car_2.time.sum()
+    lap_time_3 = car_3.time.sum()
+    lt_minutes_1 = lap_time_1//60
+    lt_seconds_1 = lap_time_1 % 60
+    lt_minutes_2 = lap_time_2//60
+    lt_seconds_2 = lap_time_2 % 60
+    lt_minutes_3 = lap_time_3//60
+    lt_seconds_3 = lap_time_3 % 60
+    
+    fig.text(0.7, 0.3, f'{lt_minutes_1:.0f}:{lt_seconds_1:.2f}', bbox=dict(facecolor='black', alpha=0.5))
+    fig.text(0.7, 0.4, f'{lt_minutes_2:.0f}:{lt_seconds_2:.2f}', bbox=dict(facecolor='green', alpha=0.5))
+    fig.text(0.7, 0.5, f'{lt_minutes_3:.0f}:{lt_seconds_3:.2f}', bbox=dict(facecolor='red', alpha=0.5))
 
     plt.show()
 
