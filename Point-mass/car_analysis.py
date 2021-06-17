@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 class Car_outing():
     def __init__(self, csv_name):
         self.csv_name = csv_name
-        car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', csv_name)
+        car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass','outings', csv_name)
         car_df = pd.read_csv(car_data_path)
         self.speed_kph = car_df['speed (km/h)']
         self.distance = car_df['Distance']
