@@ -19,7 +19,7 @@ from pathlib import Path
 ##Car imports basic car data such as power, grip, frontal area etc.
 class Car():
     def __init__(self, csv_name):
-        car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', csv_name)
+        car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass','car_data', csv_name)
         self.csv_name = csv_name
         self.car_name = Path(car_data_path).stem
 
@@ -125,7 +125,7 @@ def simulate(car:Car, track:Track):
 
     # Exported file
     export_df = speeds_df[['Distance', 'speed', 'speed (km/h)', 'dx', 't(s)']]
-    return export_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', f'{car.car_name}_{track.track_name}_outing.csv'))
+    return export_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass','outings', f'{car.car_name}_{track.track_name}_outing.csv'))
 
 car = Car('car_data_1.csv')
 track = Track('turn_radius.csv')
