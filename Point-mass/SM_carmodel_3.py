@@ -118,7 +118,9 @@ def simulate(car:Car, track:Track):
 
     ## lap time
     # getting the minimum speed of all columns (turns) and creating just one column
+    speeds_df['speed_max_latg'] = np.sqrt(car.g_lat * 9.81 * track.turn_radius)
     speeds_df['speed'] = speeds_df[corner_names].min(axis = 1)
+    speeds_df['speed'] = speeds_df[['speed','speed_max_latg']].min(axis=1)
     speeds_df['speed (km/h)'] = speeds_df['speed'] * 3.6
     speeds_df['t(s)'] = speeds_df['dx'] / speeds_df['speed']
     speeds_df['Distance'] = track.distance_m
