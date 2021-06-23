@@ -56,12 +56,11 @@ turn_radius_norm = np.sqrt(turn_radius ** 2)
 # Output dataframe
 output_df = pd.DataFrame(data= {'Distance':distance_m, 'Turn Radius':turn_radius_norm})
 
-'''
+
 #exporting it
 output_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', 'turn_radius.csv')
 output_df.to_csv(output_path)
 
-'''
 
 ## Plots
 fig, ax = plt.subplots(3)
