@@ -45,7 +45,7 @@ distance_m = source_df['Distance']
 fs = 50 # Sampling frequency, according to the source_file sampling frequency
 fc = 1 # Cutoff frequency, lower values filter more
 w = fc / (fs / 2) # Normalized frequency
-b, a = signal.butter(5, w, 'low')
+b, a = signal.butter(5, w, 'low') # Appliying a Butterworth filter
 filtered_g_lat_ms2 = signal.filtfilt(b, a, g_lat_ms2)
 
 ## Creating the radius signal
@@ -66,20 +66,21 @@ output_df.to_csv(output_path)
 fig, ax = plt.subplots(3)
 fig.suptitle('Turn Radius Profile')
 
-# first plot
+# first plot - Lateral Acceleration raw vs filtered
 ax[0].plot(distance_m, g_lat_ms2, 'r', Label = 'raw (m)')
 ax[0].plot(distance_m, filtered_g_lat_ms2, 'b', Label = 'filtered (m)')
 ax[0].set_title('Lat Accel raw vs filtered')
 
-# second plot
+# second plot - Turn Radius
 ax[1].plot(distance_m, turn_radius, 'r', Label = 'raw (m)')
 ax[1].set_title('Turn Radius')
 ax[1].set_ylim([-200, 200]) #putting limit on the y axis
 
-# third plot
+# third plot - Curvature
 ax[2].plot(distance_m, turn_radius_norm, 'r', Label = 'raw (m)')
+ax[2].set_title('Curvature')
 ax[2].set_ylim([0, 200]) #putting limit on the y axis
 
-
+fig.tight_layout(pad = 1.0) #spacing, so plot titles don't go over each other 
 
 plt.show()
