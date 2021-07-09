@@ -15,12 +15,13 @@
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class CarOuting:
     def __init__(self, csv_name):
         self.csv_name = csv_name
-        car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass','outings', csv_name)
+        car_data_path = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'outings', csv_name)
         car_df = pd.read_csv(car_data_path)
         self.speed_kph = car_df['speed (km/h)']
         self.distance = car_df['Distance']
@@ -31,10 +32,11 @@ def compare(car_1, car_2, car_3):
 
     # # Plotting
     # Plot image
-    fig, speed_plot = plt.subplots()
-    car_signal_speed1, = speed_plot.plot(car_1.distance, car_1.speed_kph, 'b')
-    car_signal_speed2, = speed_plot.plot(car_1.distance, car_2.speed_kph, 'g')
-    car_signal_speed3, = speed_plot.plot(car_1.distance, car_3.speed_kph, 'r')
+
+    fig, speed_plot = plt.subplots(2, 1)
+    car_signal_speed1, = speed_plot[0].plot(car_1.distance, car_1.speed_kph, 'b')
+    car_signal_speed2, = speed_plot[0].plot(car_1.distance, car_2.speed_kph, 'g')
+    car_signal_speed3, = speed_plot[0].plot(car_1.distance, car_3.speed_kph, 'r')
 
     # Time stamp
     lap_time_1 = car_1.time.sum()
@@ -51,11 +53,16 @@ def compare(car_1, car_2, car_3):
     lap_time_2 = f'{lt_minutes_2:.0f}:{lt_seconds_2:.2f}'
     lap_time_3 = f'{lt_minutes_3:.0f}:{lt_seconds_3:.2f}'
 
-    car_signal_speed1.set_label(lap_time_1)
-    car_signal_speed2.set_label(lap_time_2)
-    car_signal_speed3.set_label(lap_time_3)
+    # car_signal_speed1.set_label(f'{car_1}, {lap_time_1}')
+    car_signal_speed1.set_label(f'Car_1, {lap_time_1}')
+    car_signal_speed2.set_label(f'Car_2, {lap_time_2}')
+    car_signal_speed3.set_label(f'Car_3, {lap_time_3}')
 
-    speed_plot.legend()
+    speed_plot[0].legend()
+
+    clust_data = np.random.random((10, 3))
+    collabel = ("car_1", "car_2", "car_3")
+    the_table = speed_plot[1].table(cellText=clust_data, colLabels=collabel, loc='center')
 
     plt.show()
 
