@@ -11,14 +11,13 @@
 ## ==============================================================================
 ## Plotting vehicle speeds to compare the results
 
-
-## Importing libraries
+# # Importing libraries
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
 
 
-class Car_outing():
+class CarOuting:
     def __init__(self, csv_name):
         self.csv_name = csv_name
         car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass','outings', csv_name)
@@ -27,14 +26,15 @@ class Car_outing():
         self.distance = car_df['Distance']
         self.time = car_df['t(s)']
 
+
 def compare(car_1, car_2, car_3):
 
-    ## Plotting    
+    # # Plotting
     # Plot image
     fig, speed_plot = plt.subplots()
-    speed_plot.plot(car_1.distance, car_1.speed_kph, 'b')
-    speed_plot.plot(car_1.distance, car_2.speed_kph, 'g')
-    speed_plot.plot(car_1.distance, car_3.speed_kph, 'r')
+    car_signal_speed1, = speed_plot.plot(car_1.distance, car_1.speed_kph, 'b')
+    car_signal_speed2, = speed_plot.plot(car_1.distance, car_2.speed_kph, 'g')
+    car_signal_speed3, = speed_plot.plot(car_1.distance, car_3.speed_kph, 'r')
 
     # Time stamp
     lap_time_1 = car_1.time.sum()
@@ -47,14 +47,21 @@ def compare(car_1, car_2, car_3):
     lt_minutes_3 = lap_time_3//60
     lt_seconds_3 = lap_time_3 % 60
     
-    fig.text(0.91, 0.3, f'{lt_minutes_1:.0f}:{lt_seconds_1:.2f}', bbox=dict(facecolor='black', alpha=0.5))
-    fig.text(0.91, 0.4, f'{lt_minutes_2:.0f}:{lt_seconds_2:.2f}', bbox=dict(facecolor='green', alpha=0.5))
-    fig.text(0.91, 0.5, f'{lt_minutes_3:.0f}:{lt_seconds_3:.2f}', bbox=dict(facecolor='red', alpha=0.5))
+    lap_time_1 = f'{lt_minutes_1:.0f}:{lt_seconds_1:.2f}'
+    lap_time_2 = f'{lt_minutes_2:.0f}:{lt_seconds_2:.2f}'
+    lap_time_3 = f'{lt_minutes_3:.0f}:{lt_seconds_3:.2f}'
+
+    car_signal_speed1.set_label(lap_time_1)
+    car_signal_speed2.set_label(lap_time_2)
+    car_signal_speed3.set_label(lap_time_3)
+
+    speed_plot.legend()
 
     plt.show()
 
-car_1 = Car_outing('car_data_1_turn_radius_outing.csv')
-car_2 = Car_outing('car_data_2_turn_radius_outing.csv')
-car_3 = Car_outing('car_data_3_turn_radius_outing.csv')
+
+car_1 = CarOuting('car_data_1_turn_radius_outing.csv')
+car_2 = CarOuting('car_data_2_turn_radius_outing.csv')
+car_3 = CarOuting('car_data_3_turn_radius_outing.csv')
 
 compare(car_1, car_2, car_3)
