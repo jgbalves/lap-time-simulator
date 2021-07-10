@@ -18,7 +18,6 @@ import matplotlib.pyplot as plt
 import ipdb
 
 
-
 class CarOuting:
     def __init__(self, csv_name):
         self.csv_name = csv_name
@@ -65,12 +64,13 @@ def compare(car_1, car_2, car_3):
 
     speed_plot[0].legend()
 
-    clust_data_1 = car_1.car_data
-    clust_data_2 = car_2.car_data
-    clust_data_3 = car_3.car_data
-    #ipdb.set_trace()
+    df = pd.DataFrame(car_1.car_data)
+    # ipdb.set_trace()
     collabel = ("car_1", "car_2", "car_3")
-    car_data = speed_plot[1].table(cellText=[clust_data_1, clust_data_2, clust_data_3], colLabels=collabel, loc='center')
+    # car_data = speed_plot[1].table(cellText=clust_data_1, colLabels=collabel, loc='center')
+    # pd.plotting.table(speed_plot[1], clust_data_1, loc="upper right")
+    speed_plot[1].(df.plot(table=True))
+
 
     plt.show()
 
