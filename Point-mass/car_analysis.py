@@ -15,17 +15,21 @@
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
-import numpy as np
+import ipdb
+
 
 
 class CarOuting:
     def __init__(self, csv_name):
         self.csv_name = csv_name
-        car_data_path = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'outings', csv_name)
-        car_df = pd.read_csv(car_data_path)
-        self.speed_kph = car_df['speed (km/h)']
-        self.distance = car_df['Distance']
-        self.time = car_df['t(s)']
+        car_data_path = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'car_data', f'{csv_name[0:10]}'+'.csv')
+        car_outing_path = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'outings', csv_name)
+        car_outing_df = pd.read_csv(car_outing_path)
+        self.speed_kph = car_outing_df['speed (km/h)']
+        self.distance = car_outing_df['Distance']
+        self.time = car_outing_df['t(s)']
+        car_data_df = pd.read_csv(car_data_path)
+        self.car_data = car_data_df['value']
 
 
 def compare(car_1, car_2, car_3):
@@ -33,12 +37,13 @@ def compare(car_1, car_2, car_3):
     # # Plotting
     # Plot image
 
-    fig, speed_plot = plt.subplots(2, 1)
+    fig, speed_plot = plt.subplots(2, 1)  # speeds on top, car data at bottom
+    # The 3 speed signals
     car_signal_speed1, = speed_plot[0].plot(car_1.distance, car_1.speed_kph, 'b')
     car_signal_speed2, = speed_plot[0].plot(car_1.distance, car_2.speed_kph, 'g')
     car_signal_speed3, = speed_plot[0].plot(car_1.distance, car_3.speed_kph, 'r')
 
-    # Time stamp
+    # Time stamp (dividing the XXXs into mm:ss,sss)
     lap_time_1 = car_1.time.sum()
     lap_time_2 = car_2.time.sum()
     lap_time_3 = car_3.time.sum()
@@ -60,9 +65,12 @@ def compare(car_1, car_2, car_3):
 
     speed_plot[0].legend()
 
-    clust_data = np.random.random((10, 3))
+    clust_data_1 = car_1.car_data
+    clust_data_2 = car_2.car_data
+    clust_data_3 = car_3.car_data
+    #ipdb.set_trace()
     collabel = ("car_1", "car_2", "car_3")
-    the_table = speed_plot[1].table(cellText=clust_data, colLabels=collabel, loc='center')
+    car_data = speed_plot[1].table(cellText=[clust_data_1, clust_data_2, clust_data_3], colLabels=collabel, loc='center')
 
     plt.show()
 
