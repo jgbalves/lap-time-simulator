@@ -37,15 +37,7 @@ class CarOuting:
 def compare(car_1, car_2, car_3):
 
     # # Plotting
-    # Plot image
-
-    fig, speed_plot = plt.subplots(2, 1)  # speeds on top, car data at bottom
-    # The 3 speed signals
-    car_signal_speed1, = speed_plot[0].plot(car_1.distance, car_1.speed_kph, 'b')
-    car_signal_speed2, = speed_plot[0].plot(car_1.distance, car_2.speed_kph, 'g')
-    car_signal_speed3, = speed_plot[0].plot(car_1.distance, car_3.speed_kph, 'r')
-
-    # Time stamp (dividing the XXXs into mm:ss,sss)
+    # Defining the lap time stamps to be printed
     lap_time_1 = car_1.time.sum()
     lap_time_2 = car_2.time.sum()
     lap_time_3 = car_3.time.sum()
@@ -55,6 +47,16 @@ def compare(car_1, car_2, car_3):
     lt_seconds_2 = lap_time_2 % 60
     lt_minutes_3 = lap_time_3//60
     lt_seconds_3 = lap_time_3 % 60
+
+    # Defining image
+    fig, speed_plot = plt.subplots(2, 1)  # speeds on top, car data at bottom
+
+    # The 3 speed signals of the first plot
+    car_signal_speed1, = speed_plot[0].plot(car_1.distance, car_1.speed_kph, 'b')
+    car_signal_speed2, = speed_plot[0].plot(car_1.distance, car_2.speed_kph, 'g')
+    car_signal_speed3, = speed_plot[0].plot(car_1.distance, car_3.speed_kph, 'r')
+
+    # Time stamp (transforming sss,ss into mm:ss,sss)
     
     lap_time_1 = f'{lt_minutes_1:.0f}:{lt_seconds_1:.2f}'
     lap_time_2 = f'{lt_minutes_2:.0f}:{lt_seconds_2:.2f}'
@@ -65,11 +67,18 @@ def compare(car_1, car_2, car_3):
     car_signal_speed2.set_label(f'Car_2, {lap_time_2}')
     car_signal_speed3.set_label(f'Car_3, {lap_time_3}')
 
+    # Legend with colors and lap time
     speed_plot[0].legend()
-    df = np.array(car_1.car_data_value)
-    ipdb.set_trace()
+
+    # Organizing data to the second plot
+    table = pd.DataFrame(car_1.car_data_value)
+    cell_text = []
+    for row in range(0, len(table)):
+        cell_text.append(table.iloc[row])
+
+    #
     speed_plot[1].axis('off')
-    speed_plot[1].table(cellText='cars_info')
+    speed_plot[1].table(cellText=cell_text, colLabels= table.columns, loc='center')
 
     plt.show()
 
