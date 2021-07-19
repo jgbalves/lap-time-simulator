@@ -16,6 +16,7 @@ import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
 import ipdb
+import numpy as np
 
 
 class CarOuting:
@@ -27,8 +28,10 @@ class CarOuting:
         self.speed_kph = car_outing_df['speed (km/h)']
         self.distance = car_outing_df['Distance']
         self.time = car_outing_df['t(s)']
-        car_data_df = pd.read_csv(car_data_path)
-        self.car_data = car_data_df['value']
+        self.car_data_df = pd.read_csv(car_data_path)
+        self.car_data_property = self.car_data_df['car data']
+        self.car_data_value = self.car_data_df['value']
+        self.car_data_unit = self.car_data_df['unit']
 
 
 def compare(car_1, car_2, car_3):
@@ -63,14 +66,10 @@ def compare(car_1, car_2, car_3):
     car_signal_speed3.set_label(f'Car_3, {lap_time_3}')
 
     speed_plot[0].legend()
-
-    df = pd.DataFrame(car_1.car_data)
-    # ipdb.set_trace()
-    collabel = ("car_1", "car_2", "car_3")
-    # car_data = speed_plot[1].table(cellText=clust_data_1, colLabels=collabel, loc='center')
-    # pd.plotting.table(speed_plot[1], clust_data_1, loc="upper right")
-    speed_plot[1].(df.plot(table=True))
-
+    df = np.array(car_1.car_data_value)
+    ipdb.set_trace()
+    speed_plot[1].axis('off')
+    speed_plot[1].table(cellText='cars_info')
 
     plt.show()
 
