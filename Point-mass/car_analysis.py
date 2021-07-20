@@ -71,14 +71,21 @@ def compare(car_1, car_2, car_3):
     speed_plot[0].legend()
 
     # Organizing data to the second plot
-    table = pd.DataFrame(car_1.car_data_value)
+    s0 = pd.Series(car_1.car_data_property)
+    s1 = pd.Series(car_1.car_data_value)
+    s2 = pd.Series(car_2.car_data_value)
+    s3 = pd.Series(car_3.car_data_value)
+    s4 = pd.Series(car_1.car_data_unit)
+
+    # table = pd.DataFrame(car_1.car_data_value)
+    table = pd.concat([s0, s1, s2, s3, s4], axis=1)
     cell_text = []
     for row in range(0, len(table)):
         cell_text.append(table.iloc[row])
 
     #
     speed_plot[1].axis('off')
-    speed_plot[1].table(cellText=cell_text, colLabels= table.columns, loc='center')
+    speed_plot[1].table(cellText=cell_text, colLabels=table.columns, loc='center')
 
     plt.show()
 
