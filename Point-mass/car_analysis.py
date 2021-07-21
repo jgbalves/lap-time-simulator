@@ -1,22 +1,20 @@
-## ==============================================================================
-## 
-##   _____ ____  ________________     __  ___________________  _____________ 
-##  / ___// __ \/ ____/ ____/ __ \   /  |/  / ____/_  __/ __ \/  _/ ____/   |
-##  \__ \/ /_/ / __/ / __/ / / / /  / /|_/ / __/   / / / /_/ // // /   / /| |
-## ___/ / ____/ /___/ /___/ /_/ /  / /  / / /___  / / / _, _// // /___/ ___ |
-##/____/_/   /_____/_____/_____/  /_/  /_/_____/ /_/ /_/ |_/___/\____/_/  |_|
-##                                                                        
-##                           www.speedmetrica.com
-##
-## ==============================================================================
-## Plotting vehicle speeds to compare the results
+# # ==============================================================================
+# #
+# #   _____ ____  ________________     __  ___________________  _____________
+# #  / ___// __ \/ ____/ ____/ __ \   /  |/  / ____/_  __/ __ \/  _/ ____/   |
+# #  \__ \/ /_/ / __/ / __/ / / / /  / /|_/ / __/   / / / /_/ // // /   / /| |
+# # ___/ / ____/ /___/ /___/ /_/ /  / /  / / /___  / / / _, _// // /___/ ___ |
+# #/____/_/   /_____/_____/_____/  /_/  /_/_____/ /_/ /_/ |_/___/\____/_/  |_|
+# #
+# #                           www.speedmetrica.com
+# #
+# # ==============================================================================
+# # Plotting vehicle speeds to compare the results
 
 # # Importing libraries
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
-import ipdb
-import numpy as np
 
 
 class CarOuting:
@@ -70,22 +68,20 @@ def compare(car_1, car_2, car_3):
     # Legend with colors and lap time
     speed_plot[0].legend()
 
-    # Organizing data to the second plot
+    # Organizing the car data from the 3 cars to the second plot
     s0 = pd.Series(car_1.car_data_property, name='Car Properties')
     s1 = pd.Series(car_1.car_data_value, name='Car_1')
     s2 = pd.Series(car_2.car_data_value, name='Car_2')
     s3 = pd.Series(car_3.car_data_value, name='Car_3')
     s4 = pd.Series(car_1.car_data_unit, name='Value Units')
-
-    # table = pd.DataFrame(car_1.car_data_value)
     table = pd.concat([s0, s1, s2, s3, s4], axis=1)
-    cell_text = []
+    cell_text = []  # Creating a dict to be used as text in the car data table
     for row in range(0, len(table)):
-        cell_text.append(table.iloc[row])
+        cell_text.append(table.iloc[row])  # Populating the dict
 
-    #
-    speed_plot[1].axis('off')
-    speed_plot[1].table(cellText=cell_text, colLabels=table.columns, loc='center')
+    # Plotting the table
+    speed_plot[1].axis('off')  # hiding the plot so just the table exhibits
+    speed_plot[1].table(cellText=cell_text, colLabels=table.columns, loc='center')  # Table
 
     plt.show()
 
