@@ -1,8 +1,8 @@
 car data,value,unit
-Mass,700,kg
-Frontal area,1.54,m²
-Drag coefficient,0.525,unitless
-GG circle radius,1.1,G
-Power output,260,bhp
-Transm. efficiency,91,%
+Mass,1320,kg
+Frontal area,1.997,m²
+Drag coefficient,0.34,unitless
+GG circle radius,1.24,G
+Power output,500,bhp
+Transm. efficiency,90,%
 Air density,1.23,kg/m³

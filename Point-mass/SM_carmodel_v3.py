@@ -133,4 +133,4 @@ def simulate(car:Car, track:Track):
 car = Car('car_data_3.csv')
 track = Track('turn_radius.csv')
 
-simulate(car,track)
+simulate(car, track)
