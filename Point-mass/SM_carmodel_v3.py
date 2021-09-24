@@ -130,7 +130,7 @@ def simulate(car:Car, track:Track):
     return export_df.to_csv(Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass','outings', f'{car.car_name}_{track.track_name}_outing.csv'))
 
 
-car = Car('car_data_3.csv')
+car = Car('car_data_2.csv')
 track = Track('turn_radius.csv')
 
 simulate(car, track)
