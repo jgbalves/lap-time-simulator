@@ -16,13 +16,31 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-data_from_i2 = 'interlagos_corner_data.csv'
-data_from_lts = '../track_coordinates/turn_radius.csv'
+# # Getting the data
+data_from_i2 = 'interlagos_corner_data.csv'    # Data from motec i2, for validation
+data_from_lts = '../track_coordinates/turn_radius.csv'    # Data from the lap time simulator (LTS)
 
-df_lts = pd.read_csv(data_from_lts, sep=',')
-df_i2 = pd.read_csv(data_from_i2, sep=',', low_memory=False, skiprows=13)
+df_lts = pd.read_csv(data_from_lts, sep=',')    # LTS data transformed to dataframe
+df_i2 = pd.read_csv(data_from_i2, sep=',', low_memory=False, skiprows=13)    # motec data transformed to dataframe
+df_i2 = df_i2.drop([0], axis=0)
+# df_i2['Corner Radius Norm'].fillna(value='None', inplace=True)    # Cleaning motec data from NaN values to 'None'
+df_i2['Corner Radius Norm'].fillna(method='ffill', inplace=True)
+pd.to_numeric(df_i2['Corner Radius Norm'])
 
-fig, ax = plt.subplots(2, 1, figsize=(10, 5))
-plot_1 = ax[0].plot(df_lts['Corner Radius Norm'])
+# print(df_i2.loc[[117]])
+# print(df_lts.head())
+# print(df_i2.head())
+# print(df_i2['Corner Radius Norm'])
+# print(df_i2['Corner Radius'])
+# print(df_i2.loc[df_i2['Corner Radius Norm'] == 'None'])
+# print(df_i2.isnull().values.any())
+# print(df_i2.isna().sum())
+# print(df_i2[df_i2['Corner Radius Norm'].isnull()])
 
+
+fig, ax = plt.subplots(figsize=(10, 5))
+# lts_plot = ax.plot(df_lts['Turn Radius'])
+i2_plot = ax.plot(df_i2['Corner Radius Norm'])
+# i2_plot = ax.plot(df_i2['Corner Radius'])
+plt.ylim(0, 500)
 plt.show()
