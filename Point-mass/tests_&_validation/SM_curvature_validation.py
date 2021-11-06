@@ -13,8 +13,8 @@
 
 # # Importing libraries
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 # # Getting the data
 data_from_i2 = 'interlagos_corner_data.csv'    # Data from motec i2, for validation
@@ -23,24 +23,29 @@ data_from_lts = '../track_coordinates/turn_radius.csv'    # Data from the lap ti
 df_lts = pd.read_csv(data_from_lts, sep=',')    # LTS data transformed to dataframe
 df_i2 = pd.read_csv(data_from_i2, sep=',', low_memory=False, skiprows=13)    # motec data transformed to dataframe
 df_i2 = df_i2.drop([0], axis=0)
-# df_i2['Corner Radius Norm'].fillna(value='None', inplace=True)    # Cleaning motec data from NaN values to 'None'
-df_i2['Corner Radius Norm'].fillna(method='ffill', inplace=True)
-pd.to_numeric(df_i2['Corner Radius Norm'])
+df_i2['Corner Radius Norm'].fillna(method='ffill', inplace=True)    # Cleaning motec data (NaN subst. by prev value)
+df_i2['Corner Radius Norm'] = pd.to_numeric(df_i2['Corner Radius Norm'])
 
-# print(df_i2.loc[[117]])
-# print(df_lts.head())
-# print(df_i2.head())
-# print(df_i2['Corner Radius Norm'])
-# print(df_i2['Corner Radius'])
-# print(df_i2.loc[df_i2['Corner Radius Norm'] == 'None'])
-# print(df_i2.isnull().values.any())
-# print(df_i2.isna().sum())
-# print(df_i2[df_i2['Corner Radius Norm'].isnull()])
+# # Creating plot Subfigure
+fig = make_subplots(
+        rows=1, cols=1
+    )
 
+data_1 = fig.add_trace(
+            go.Scatter(
+                x=df_i2['Distance'],
+                y=df_i2['Corner Radius Norm'],
+                mode='lines'),
+            row=1, col=1
+        )
 
-fig, ax = plt.subplots(figsize=(10, 5))
-# lts_plot = ax.plot(df_lts['Turn Radius'])
-i2_plot = ax.plot(df_i2['Corner Radius Norm'])
-# i2_plot = ax.plot(df_i2['Corner Radius'])
-plt.ylim(0, 500)
-plt.show()
+data_2 = fig.add_trace(
+            go.Scatter(
+                x=df_lts['Distance'],
+                y=df_lts['Turn Radius'],
+                mode='lines'),
+            row=1, col=1
+        )
+fig.update_yaxes(range=[0, 2000])
+
+fig.show()
