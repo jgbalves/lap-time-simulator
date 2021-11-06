@@ -16,6 +16,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
+
 # #Car imports basic car data such as power, grip, frontal area etc.
 class Car:
     def __init__(self, csv_name):
@@ -24,14 +25,14 @@ class Car:
         self.car_name = Path(car_data_path).stem
 
         car_df = pd.read_csv(car_data_path)
-        car_df.dropna(inplace = True)
-        self.g_lat = pd.to_numeric(car_df.iloc[3,1], downcast='float')
-        self.tranny_efc = pd.to_numeric(car_df.iloc[5,1], downcast='float') / 100
-        self.power = pd.to_numeric(car_df.iloc[4,1], downcast='float') * 745.7 * self.tranny_efc
-        self.air_density = pd.to_numeric(car_df.iloc[6,1], downcast='float')
-        self.frontal_area = pd.to_numeric(car_df.iloc[1,1], downcast='float')
-        self.drag_coef = pd.to_numeric(car_df.iloc[2,1], downcast='float')
-        self.car_mass = pd.to_numeric(car_df.iloc[0,1], downcast='float')
+        car_df.dropna(inplace=True)
+        self.g_lat = pd.to_numeric(car_df.iloc[3, 1], downcast='float')
+        self.tranny_efc = pd.to_numeric(car_df.iloc[5, 1], downcast='float') / 100
+        self.power = pd.to_numeric(car_df.iloc[4, 1], downcast='float') * 745.7 * self.tranny_efc
+        self.air_density = pd.to_numeric(car_df.iloc[6, 1], downcast='float')
+        self.frontal_area = pd.to_numeric(car_df.iloc[1, 1], downcast='float')
+        self.drag_coef = pd.to_numeric(car_df.iloc[2, 1], downcast='float')
+        self.car_mass = pd.to_numeric(car_df.iloc[0, 1], downcast='float')
 
 
 # #Track imports turn radiuses and distances and finds corner apexes
@@ -52,6 +53,7 @@ class Track:
         K = np.r_[True, self.turn_radius[1:] < self.turn_radius[:-1]] & np.r_[self.turn_radius[:-1] < self.turn_radius[1:], True]
         # Taking note of apex positions
         self.apexes = [i for i, x in enumerate(K) if x]
+
 
 # # Simulate gets the car specs and corner radiuses and create a speed profile
 def simulate(car:Car, track:Track):
