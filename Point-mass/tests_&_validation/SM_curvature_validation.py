@@ -30,12 +30,19 @@ df_i2['Corner Radius Norm'] = pd.to_numeric(df_i2['Corner Radius Norm'])
 fig = make_subplots(
         rows=1, cols=1
     )
+fig.update_layout(title='Corner Radius - i2 vs LTS',
+                  plot_bgcolor='rgb(230, 230,230)',
+                  showlegend=True)
+fig.update_yaxes(range=[0, 2000])
 
+# Adding the data
 data_1 = fig.add_trace(
             go.Scatter(
                 x=df_i2['Distance'],
                 y=df_i2['Corner Radius Norm'],
-                mode='lines'),
+                mode='lines',
+                name='motec i2 channel'
+            ),
             row=1, col=1
         )
 
@@ -43,9 +50,10 @@ data_2 = fig.add_trace(
             go.Scatter(
                 x=df_lts['Distance'],
                 y=df_lts['Turn Radius'],
-                mode='lines'),
+                mode='lines',
+                name='LTS channel'
+            ),
             row=1, col=1
         )
-fig.update_yaxes(range=[0, 2000])
 
 fig.show()
