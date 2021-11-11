@@ -23,8 +23,8 @@ import numpy as np
 # # Building the dataframe
 
 # choosing file
-source_file = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'motec_exports', 'Interlagos_Ohira.csv')
-source_df = pd.read_csv(source_file, sep = ',', low_memory = False, skiprows=13)
+source_file = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'motec_exports', 'Interlagos_Ohira.csv')
+source_df = pd.read_csv(source_file, sep=',', low_memory=False, skiprows=13)
 
 # Dropping null value columns out to avoid errors
 source_df.dropna(inplace = True)
@@ -32,9 +32,9 @@ source_df.dropna(inplace = True)
 # # Choosing columns to calculate the necessary values
 
 # converting dataframe colums to numeric to avoid errors
-source_df['G Force Lat'] = pd.to_numeric(source_df['G Force Lat'], downcast= 'float')
-source_df['Corr Speed'] = pd.to_numeric(source_df['Corr Speed'], downcast = 'float')
-source_df['Distance'] = pd.to_numeric(source_df['Distance'], downcast = 'float')
+source_df['G Force Lat'] = pd.to_numeric(source_df['G Force Lat'], downcast='float')
+source_df['Corr Speed'] = pd.to_numeric(source_df['Corr Speed'], downcast='float')
+source_df['Distance'] = pd.to_numeric(source_df['Distance'], downcast='float')
 
 g_lat = source_df['G Force Lat']
 g_lat_ms2 = source_df['G Force Lat'] * 9.81
@@ -81,6 +81,6 @@ ax[2].plot(distance_m, turn_radius_norm, 'r', Label='raw (m)')
 ax[2].set_title('Curvature')
 ax[2].set_ylim([0, 200])    # Putting limit on the y axis
 
-fig.tight_layout(pad = 1.0)    # Spacing, so plot titles don't go over each other
+fig.tight_layout(pad=1.0)    # Spacing, so plot titles don't go over each other
 
 plt.show()

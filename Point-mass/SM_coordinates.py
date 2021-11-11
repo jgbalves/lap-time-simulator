@@ -36,7 +36,7 @@ cy = df['cy']
 
 for index in range(0, cx.size):
 
-# Locating the indexes of the points used in space (point in question, the point before and the point after)
+    # Locating the indexes of the points used in space (point in question, the point before and the point after)
 
     cx_bef = cx.iat[index - 1]
     cx_act = cx.iat[index + 0]
@@ -46,7 +46,7 @@ for index in range(0, cx.size):
     cy_act = cy.iat[index + 0]
     cy_nxt = cy.iat[(index + 1)%cx.size]
 
-# populating the empty a b and c lists
+    # populating the empty a b and c lists
 
     a.append(
         np.sqrt(
@@ -71,9 +71,9 @@ for index in range(0, cx.size):
 
 
 # Converting from array to series
-a = pd.Series(data = a)
-b = pd.Series(data = b)
-c = pd.Series(data = c)
+a = pd.Series(data=a)
+b = pd.Series(data=b)
+c = pd.Series(data=c)
 
 # finding the angle created by these three points, with an generic center
 # cos A = (b² + c² - a²)/2bc
@@ -82,7 +82,7 @@ cos_A = (
     (2 * b * c)
     )
 
-#cos_A(a, b, c)
+# cos_A(a, b, c)
 A_rad = np.arccos(cos_A)
 
 # Probably it will not be used but there's the conversion from rad to deg
@@ -94,12 +94,15 @@ df2 = pd.DataFrame(data = {'Distance_A':a,'Angle_Radians':A_rad})
 # finally, the radius (if three points are in straight, the denominator will be zero)
 # R = a / (2 * sin(180-A))
 
+
 def turn_radius (n, d):
     if d ==0: return np.inf
     return n/d
 
+
 def calculate_turn_radius (row):
     return turn_radius(row.Distance_A, (2 * np.sin(np.pi - row.Angle_Radians)))
+
 
 # aplying the two functions combined, so we can write the calculation for row to row
 df['Corner Radius'] = df2.apply(calculate_turn_radius, axis = 1)
