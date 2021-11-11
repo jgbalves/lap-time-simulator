@@ -3,7 +3,7 @@ import numpy as np
 
 # Track file (the start point needs to be just one. Neither b or c distances can't be zero (see those ahead))
 
-#Tracks available
+# Tracks available
 # Sample_track.csv
 # interlagos.csv
 # km.csv
@@ -12,8 +12,8 @@ import numpy as np
 df = pd.read_csv("C:\\Users\\jgbal\\Github\\lap-time-simulator\\Point-mass\\track_coordinates\\SaoPaulo.csv", sep = ',', low_memory = False)
 
 # convert column "cx" and "cy" of a DataFrame
-df["cx"] = pd.to_numeric(df["cx"], downcast = 'float')
-df["cy"] = pd.to_numeric(df["cy"], downcast = 'float')
+df["cx"] = pd.to_numeric(df["cx"], downcast='float')
+df["cy"] = pd.to_numeric(df["cy"], downcast='float')
 
 # To add new columns df['New column'] = 'test'
 # to find a row (string) print(df.iloc[1])
@@ -50,22 +50,22 @@ for index in range(0, cx.size):
 
     a.append(
         np.sqrt(
-        (cx_nxt - cx_bef)**2 +
-        (cy_nxt - cy_bef)**2
+            (cx_nxt - cx_bef)**2 +
+            (cy_nxt - cy_bef)**2
         )
     )
 
     b.append(
         np.sqrt(
-        (cx_nxt - cx_act)**2 +
-        (cy_nxt - cy_act)**2
+            (cx_nxt - cx_act)**2 +
+            (cy_nxt - cy_act)**2
         )
     )
 
     c.append(
-    np.sqrt(
-        (cx_act - cx_bef)**2 +
-        (cy_act - cy_bef)**2
+        np.sqrt(
+            (cx_act - cx_bef)**2 +
+            (cy_act - cy_bef)**2
         )
     )
 
@@ -89,23 +89,23 @@ A_rad = np.arccos(cos_A)
 A_deg = A_rad * 180 / np.pi
 
 # Creating an auxiliary dataframe with distance a and angle, to do the next calculations
-df2 = pd.DataFrame(data = {'Distance_A':a,'Angle_Radians':A_rad})
+df2 = pd.DataFrame(data={'Distance_A':a,'Angle_Radians':A_rad})
 
 # finally, the radius (if three points are in straight, the denominator will be zero)
 # R = a / (2 * sin(180-A))
 
 
-def turn_radius (n, d):
+def turn_radius(n, d):
     if d ==0: return np.inf
     return n/d
 
 
-def calculate_turn_radius (row):
+def calculate_turn_radius(row):
     return turn_radius(row.Distance_A, (2 * np.sin(np.pi - row.Angle_Radians)))
 
 
 # aplying the two functions combined, so we can write the calculation for row to row
-df['Corner Radius'] = df2.apply(calculate_turn_radius, axis = 1)
+df['Corner Radius'] = df2.apply(calculate_turn_radius, axis=1)
 
 # recording the resulting dataframe in a csv
 df.to_csv(r'C:\Users\jgbal\Github\lap-time-simulator\Point-mass\track_coordinates\calculated_radiuses.csv')
