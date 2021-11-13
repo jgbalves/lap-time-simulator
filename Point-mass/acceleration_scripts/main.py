@@ -11,3 +11,6 @@
 # # /_/  /_/  /___/  /_/ |_/  /_____/ /____/ /_____/  /_/
 # # ==============================================================================
 # # Main script for a straight line simulation
+
+# # Importing libraries
+import LekTS_Accel as mmdrag
