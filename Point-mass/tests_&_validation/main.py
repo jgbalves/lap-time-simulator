@@ -16,11 +16,17 @@ import SM_validation_functions as SMv
 
 
 def main():
-    data_from_i2 = 'interlagos_corner_data.csv'
-    data_from_lts = '../track_coordinates/turn_radius.csv'
-    app = SMv.ValidationPlots(data_from_i2, data_from_lts)
-    plot = app.corner_radius()
-    plot.show()
+    corner_data_from_i2 = 'interlagos_corner_data.csv'
+    corner_data_from_lts = '../track_coordinates/turn_radius.csv'
+
+    speed_data_from_i2 = 'interlagos_speed_data.csv'
+    speed_data_from_lts = '../outings/car_data_1_turn_radius_outing.csv'
+
+    app = SMv.TurnRadiusValidation(corner_data_from_i2, corner_data_from_lts)
+    # app.corner_radius().show()
+
+    app2 = SMv.SpeedValidation(speed_data_from_i2, speed_data_from_lts)
+    app2.speed_comparison().show()
 
 
 if __name__ == '__main__':
