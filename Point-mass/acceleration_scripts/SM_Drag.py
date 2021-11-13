@@ -4,26 +4,26 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # Track path and car path (track must be a straight line)
-track_details_path = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', 'calculated_radiuses.csv')
+track_details_path = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', '../track_coordinates', 'calculated_radiuses.csv')
 car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'car_data.csv')
 
 track_df = pd.read_csv(track_details_path)
 car_df = pd.read_csv(car_data_path)
 
 # Dropping out null value columns to avoid errors
-car_df.dropna(inplace = True)
+car_df.dropna(inplace=True)
 
 # Converting dataframe columns to numeric, to avoid errors
 
-#track
+# Track
 track_df['cx'] = pd.to_numeric(track_df['cx'], downcast= 'float')
 track_df['cy'] = pd.to_numeric(track_df['cy'], downcast= 'float')
 
-#car
+# Car
 g_lat = pd.to_numeric(car_df.iloc[3,1], downcast='float')
 tranny_efc = pd.to_numeric(car_df.iloc[5,1], downcast='float') / 100
 Power = pd.to_numeric(car_df.iloc[4,1], downcast='float') * 745.7 * tranny_efc
-air_density =  pd.to_numeric(car_df.iloc[6,1], downcast='float')
+air_density = pd.to_numeric(car_df.iloc[6,1], downcast='float')
 frontal_area = pd.to_numeric(car_df.iloc[1,1], downcast='float')
 drag_coef = pd.to_numeric(car_df.iloc[2,1], downcast='float')
 car_mass = pd.to_numeric(car_df.iloc[0,1], downcast='float')
