@@ -20,7 +20,7 @@ from pathlib import Path
 # #Car imports basic car data such as power, grip, frontal area etc.
 class Car:
     def __init__(self, csv_name):
-        car_data_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass','car_data', csv_name)
+        car_data_path = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'car_data', csv_name)
         self.csv_name = csv_name
         self.car_name = Path(car_data_path).stem
 
@@ -38,7 +38,7 @@ class Car:
 # #Track imports turn radiuses and distances and finds corner apexes
 class Track:
     def __init__(self, csv_name):
-        track_details_path = Path(Path.home(),'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', csv_name)
+        track_details_path = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'track_coordinates', csv_name)
         self.csv_name = csv_name
         self.track_name = Path(track_details_path).stem
 

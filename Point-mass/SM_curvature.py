@@ -23,11 +23,11 @@ import numpy as np
 # # Building the dataframe
 
 # choosing file
-source_file = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'motec_exports', 'Interlagos_Ohira.csv')
-source_df = pd.read_csv(source_file, sep=',', low_memory=False, skiprows=13)
+source_file = Path(Path.home(), 'Github', 'lap-time-simulator', 'Point-mass', 'motec_exports', 'Interlagos_Ohira.csv')  # Import data as table
+source_df = pd.read_csv(source_file, sep=',', low_memory=False, skiprows=13)    # Creating Table
 
 # Dropping null value columns out to avoid errors
-source_df.dropna(inplace = True)
+source_df.dropna(inplace = True)    # Excluding null values
 
 # # Choosing columns to calculate the necessary values
 
@@ -45,7 +45,7 @@ distance_m = source_df['Distance']
 fs = 50    # Sampling frequency, according to the source_file sampling frequency
 fc = 1    # Cutoff frequency, lower values filter more
 w = fc / (fs / 2)   # Normalized frequency
-b, a = signal.butter(5, w, 'low')    # Appliying a Butterworth filter
+b, a = signal.butter(5, w, 'low')    # Appliying a Butterworth filter (order, critical freq, filter type)
 filtered_g_lat_ms2 = signal.filtfilt(b, a, g_lat_ms2)
 
 # # Creating the radius signal
