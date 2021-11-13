@@ -11,3 +11,15 @@
 # # /_/  /_/  /___/  /_/ |_/  /_____/ /____/ /_____/  /_/
 # # ==============================================================================
 # # Classes and functions of a straight line simulation
+
+# # Importing libraries
+import numpy as np
+
+
+class Acceleration(object):
+    def __init__(self):
+        self.track_length = 100    # Track length [m]
+        # self.distance = 0:0.05:self.track_length    # Distance vector (still in doubt)
+        self.curvature = 300 * np.ones(self.distance)   # Curvature?
+        self.elevation = -15 * np.sin(self.distance * np.pi / (0.5 * self.track_length))
+
