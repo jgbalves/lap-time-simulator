@@ -23,3 +23,6 @@ class Acceleration(object):
         self.curvature = 300 * np.ones(self.distance)   # Curvature?
         self.elevation = -15 * np.sin(self.distance * np.pi / (0.5 * self.track_length))
 
+    def mmdrag(self):
+        pass
+
