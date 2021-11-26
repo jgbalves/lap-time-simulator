@@ -10,3 +10,22 @@
 # #
 # # ==============================================================================
 # # Point mass lap time simulator
+
+# # Importing Libraries
+import SM_carmodel_v3 as lts
+import SM_car_analysis as ltsplt
+
+
+def main():
+    # car = lts.Car('car_data_2.csv')
+    # track = lts.Track('turn_radius.csv')
+    # lts.simulate(car, track)
+
+    car_1 = ltsplt.CarOuting('car_data_1_turn_radius_outing.csv')
+    car_2 = ltsplt.CarOuting('car_data_2_turn_radius_outing.csv')
+    car_3 = ltsplt.CarOuting('car_data_3_turn_radius_outing.csv')
+    ltsplt.compare(car_1, car_2, car_3)
+
+
+if __name__ == '__main__':
+    main()

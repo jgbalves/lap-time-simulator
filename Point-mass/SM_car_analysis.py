@@ -85,9 +85,3 @@ def compare(car_1, car_2, car_3):
 
     plt.show()
 
-
-car_1 = CarOuting('car_data_1_turn_radius_outing.csv')
-car_2 = CarOuting('car_data_2_turn_radius_outing.csv')
-car_3 = CarOuting('car_data_3_turn_radius_outing.csv')
-
-compare(car_1, car_2, car_3)
