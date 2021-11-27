@@ -129,11 +129,9 @@ def simulate(car:Car, track:Track):
 
     # # Launching speed
     import pdb; pdb.set_trace()
-    # speed0_lap2 =
     # speeds_df['speed'].iloc[-1]
-    # track.apexes[0]
-    # speeds_df['speed'].loc[speeds_df['speed'].index[-1]:track.apexes[0]]
-    # speeds_df['speed'].loc[speeds_df['speed'].index[0]:track.apexes[0]]
+    # speeds_lap2 = speeds_df[['Distance', 'speed', 'speed (km/h)', 'dx', 't(s)']]
+    # speeds_lap2 = speeds_lap2.loc[speeds_df['speed'].index[0]:track.apexes[0]]    # Those two lines are the start
 
     # speeds_df['speed'].loc[0]
 
