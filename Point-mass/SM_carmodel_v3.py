@@ -110,7 +110,7 @@ def simulate(car:Car, track:Track):
                 dx = track.distance_m[index] - track.distance_m[(index + 1)%track.distance_m.size]
             speed_nxt = corner_speed.iat[(index + 1)%track.distance_m.size]
             car_drag = car.drag_coef * car.air_density * speed_nxt ** 2 * car.frontal_area / 2
-            corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (car.g_lat * 9.81 + car_drag/car.car_mass))    
+            corner_speed.at[index] = np.sqrt(speed_nxt**2 - 2 * dx * (car.g_lat * 9.81 + car_drag/car.car_mass))
 
     # Calculating the distance steps
     for index in range(1, track.distance_m.size):
@@ -121,11 +121,21 @@ def simulate(car:Car, track:Track):
     # # lap time
     # getting the minimum speed of all columns (turns) and creating just one column
     speeds_df['speed_max_latg'] = np.sqrt(car.g_lat * 9.81 * track.turn_radius)
-    speeds_df['speed'] = speeds_df[corner_names].min(axis = 1)
-    speeds_df['speed'] = speeds_df[['speed', 'speed_max_latg']].min(axis=1)
-    speeds_df['speed (km/h)'] = speeds_df['speed'] * 3.6
+    speeds_df['speed'] = speeds_df[corner_names].min(axis=1)    # Minimum velocities from all turn exits
+    speeds_df['speed'] = speeds_df[['speed', 'speed_max_latg']].min(axis=1)    # Min. val betw. corner exits and speeds
+    speeds_df['speed (km/h)'] = speeds_df['speed'] * 3.6    # Converting to kph
     speeds_df['t(s)'] = speeds_df['dx'] / speeds_df['speed']
     speeds_df['Distance'] = track.distance_m
+
+    # # Launching speed
+    import pdb; pdb.set_trace()
+    # speed0_lap2 =
+    # speeds_df['speed'].iloc[-1]
+    # track.apexes[0]
+    # speeds_df['speed'].loc[speeds_df['speed'].index[-1]:track.apexes[0]]
+    # speeds_df['speed'].loc[speeds_df['speed'].index[0]:track.apexes[0]]
+
+    # speeds_df['speed'].loc[0]
 
     # Exported file
     export_df = speeds_df[['Distance', 'speed', 'speed (km/h)', 'dx', 't(s)']]
